@@ -1,0 +1,5 @@
+canvas {
+  border:2px solid #844;
+  background: radial-gradient(circle at center,#fffefb 0%,#fff4e0 100%);
+  box-shadow:0 0 8px rgba(100,25,25,0.3);
+}
