@@ -1,395 +1,191 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ta">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Parasara Jyotish — Shelter Chain Finder</title>
-<style>
-*{box-sizing:border-box;margin:0;padding:0;}
-body{font-family:system-ui,-apple-system,sans-serif;background:#f5f4f0;color:#222;padding:1rem;font-size:14px;}
-.wrap{max-width:580px;margin:0 auto;}
-h1{font-size:17px;font-weight:700;text-align:center;color:#3C3489;margin-bottom:3px;}
-.sub{font-size:12px;text-align:center;color:#888;margin-bottom:1.25rem;}
-.tabs{display:flex;border:1px solid #ccc;border-radius:8px;overflow:hidden;margin-bottom:1.25rem;}
-.tab{flex:1;padding:10px;text-align:center;cursor:pointer;font-size:13px;background:#eeecfb;color:#666;border:none;outline:none;}
-.tab.on{background:#fff;color:#3C3489;font-weight:700;}
-label{font-size:12px;color:#555;display:block;margin-bottom:4px;}
-.fg{margin-bottom:10px;}
-input[type=date],input[type=time],input[type=text],select{width:100%;padding:9px 11px;border:1px solid #ccc;border-radius:7px;font-size:13px;background:#fff;color:#222;appearance:auto;}
-.gbtn{background:#534AB7;color:#fff;border:none;border-radius:8px;padding:11px;font-size:14px;cursor:pointer;width:100%;font-weight:700;margin-top:6px;}
-.gbtn:hover{background:#3C3489;}
-.disc{font-size:11px;color:#7a5200;margin-top:10px;background:#fff8e1;border:1px solid #f0c040;border-radius:6px;padding:8px 10px;}
-.err{color:#c0392b;font-size:12px;margin-top:6px;min-height:18px;}
-.hint{font-size:12px;color:#666;margin-bottom:10px;padding:8px 10px;background:#eeecfb;border-radius:7px;}
-/* Kattam */
-.kattam{display:grid;grid-template-columns:repeat(4,1fr);grid-template-rows:repeat(4,74px);gap:2px;background:#bbb;border:1px solid #bbb;border-radius:6px;overflow:hidden;margin:1rem 0;}
-.rc{background:#fff;padding:4px 5px;}
-.rc.clk{cursor:pointer;}
-.rc.clk:hover{background:#f0eeff;}
-.rc.ilg{outline:2.5px solid #534AB7;outline-offset:-2px;}
-.rc.sel{background:#EEEDFE;}
-.cc{background:#f5f4f0;display:flex;align-items:center;justify-content:center;text-align:center;}
-.rn{font-size:9px;color:#888;line-height:1.3;}
-.pcs{display:flex;flex-wrap:wrap;gap:2px;margin-top:3px;}
-.ltag{font-size:9px;background:#534AB7;color:#fff;padding:1px 5px;border-radius:3px;}
-.ptag{font-size:9px;background:#EEEDFE;color:#3C3489;padding:1px 3px;border-radius:2px;}
-.ptag.s1{background:#d4f5e9;color:#085041;}
-.ptag.s2{background:#fff3cd;color:#7a5200;}
-.ptag.s3{background:#ffe0d5;color:#7a1500;}
-.ptag.s4{background:#fce4ec;color:#6a0036;}
-/* Picker */
-.picker{background:#fff;border:1px solid #ddd;border-radius:8px;padding:12px;margin-bottom:1rem;}
-.pk-title{font-size:12px;font-weight:700;margin-bottom:8px;color:#222;}
-.pb{display:flex;flex-wrap:wrap;gap:6px;}
-.pb button{padding:5px 10px;font-size:11px;border:1px solid #ccc;border-radius:20px;cursor:pointer;background:#f5f4f0;color:#333;}
-.pb button.on{background:#EEEDFE;border-color:#534AB7;color:#3C3489;font-weight:700;}
-.pb button.lon{background:#534AB7;color:#fff;border-color:#534AB7;}
-/* Chain */
-.sectlbl{font-size:11px;color:#888;text-transform:uppercase;letter-spacing:.07em;margin:1rem 0 8px;}
-.snode{border:1px solid #e0e0e0;border-radius:8px;padding:10px 12px;margin-bottom:4px;background:#fff;}
-.snode.lg{border-color:#AFA9EC;background:#EEEDFE;}
-.snode.sh{border-color:#5DCAA5;background:#E1F5EE;}
-.snode.sf{border-color:#EF9F27;background:#FAEEDA;}
-.snode.lp{border-color:#F09595;background:#FCEBEB;}
-.nlbl{font-size:10px;color:#888;text-transform:uppercase;letter-spacing:.05em;margin-bottom:2px;}
-.npl{font-size:14px;font-weight:700;color:#222;}
-.nrs{font-size:11px;color:#666;margin-top:2px;}
-.arr{text-align:center;color:#bbb;font-size:16px;margin:2px 0;}
-.bbdg{display:inline-block;font-size:10px;font-weight:700;padding:2px 9px;border-radius:20px;margin-top:5px;}
-.bself{background:#FAEEDA;color:#633806;border:1px solid #EF9F27;}
-.bloop{background:#FCEBEB;color:#A32D2D;border:1px solid #F09595;}
-/* Deity cards */
-.dcard{background:#fff;border:1px solid #e8e8e8;border-radius:8px;padding:12px;margin-bottom:8px;display:flex;gap:10px;align-items:flex-start;}
-.dbadge{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;margin-top:2px;}
-.d0{background:#EEEDFE;color:#3C3489;}
-.d1{background:#d4f5e9;color:#085041;}
-.d2{background:#fff3cd;color:#7a5200;}
-.d3{background:#ffe0d5;color:#7a1500;}
-.d4{background:#fce4ec;color:#6a0036;}
-.dbody{flex:1;min-width:0;}
-.dplnt{font-size:11px;color:#534AB7;font-weight:700;margin-bottom:3px;}
-.dname{font-size:14px;font-weight:700;color:#222;margin-bottom:4px;line-height:1.4;}
-.dtags{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:5px;}
-.dtag{font-size:10px;background:#f0eeff;border:1px solid #ccc;color:#555;border-radius:20px;padding:2px 8px;}
-.dmtr{font-size:11px;color:#534AB7;font-style:italic;margin-bottom:4px;}
-.dins{font-size:11px;color:#666;line-height:1.5;}
-/* Summary */
-.sumbox{background:#534AB7;color:#EEEDFE;border-radius:10px;padding:14px;margin:1rem 0;}
-.sumlbl{font-size:10px;opacity:.7;text-transform:uppercase;letter-spacing:.06em;margin-bottom:5px;}
-.sumchain{font-size:13px;font-weight:700;line-height:1.9;}
-.sumbrk{font-size:11px;opacity:.85;margin-top:8px;}
-.pm{font-size:13px;color:#666;background:#f5f4f0;border-radius:8px;padding:12px;margin-top:.5rem;}
-.ld{text-align:center;padding:1.5rem;color:#888;font-size:13px;}
-.planet-table{width:100%;border-collapse:collapse;font-size:12px;margin:8px 0;}
-.planet-table th{text-align:left;color:#888;font-weight:600;padding:4px 6px;border-bottom:1px solid #eee;}
-.planet-table td{padding:4px 6px;border-bottom:1px solid #f0f0f0;color:#333;}
-.planet-table tr:last-child td{border-bottom:none;}
-.calc-note{font-size:11px;color:#888;margin-top:6px;font-style:italic;}
-</style>
+  <meta charset="UTF-8">
+  <title>Luck Enabler — குருவே சரணம்</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="[fonts.googleapis.com](https://fonts.googleapis.com/css2?family=Noto+Sans+Tamil&display=swap)" rel="stylesheet">
+
+  <style>
+    body {
+      font-family: 'Noto Sans Tamil', sans-serif;
+      background:#fdf9f2; color:#222; text-align:center; margin:0; padding:0;
+    }
+    header { background:#933; color:#fff; padding:10px 0; }
+    h1 { margin:0; font-size:1.6em; }
+    h2 { color:#fff7ee; margin:5px 0 10px; font-size:1em; }
+    .inputs {
+      display:flex; flex-wrap:wrap; justify-content:center; gap:10px;
+      margin:15px auto; max-width:650px; background:#fff6ee; border-radius:6px; padding:10px;
+    }
+    label { display:flex; flex-direction:column; font-size:0.9em; }
+    input, select, button {
+      font-size:1em; padding:5px; border:1px solid #aaa; border-radius:4px;
+    }
+    canvas { border:1px solid #666; background:#fff; margin:20px auto; display:block; cursor:pointer; }
+    #result {
+      margin:10px auto; padding:10px; background:#fff; max-width:550px;
+      border:1px solid #caa; border-radius:6px;
+    }
+    footer { margin:15px; font-size:0.9em; color:#555; }
+    .langBtn { background:#933; color:#fff; border:none; border-radius:4px; padding:5px 10px; cursor:pointer; }
+  </style>
+
+  <script src="js/moment.min.js"></script>
+  <script src="js/moment-timezone.min.js"></script>
+  <script src="js/swisseph.min.js"></script>
 </head>
+
 <body>
-<div class="wrap">
-  <h1>குருவே சரணம் — Parasara Jyotish</h1>
-  <div class="sub">Shelter Provider Chain Finder · பராசரா சரணாலய சங்கிலி</div>
-  <div class="tabs">
-    <button class="tab on" onclick="sMode('birth')">Birth Data</button>
-    <button class="tab" onclick="sMode('manual')">Manual Chart Entry</button>
+  <header>
+    <h1 id="title">Luck Enabler — குருவே சரணம்</h1>
+    <h2 id="subtitle">South Indian Birth Horoscope and Shelter Finder · தென் இந்திய ஜாதக கணிப்பு மற்றும் சரண தேடல்</h2>
+    <button class="langBtn" onclick="toggleLang()">தமிழ் / English</button>
+  </header>
+
+  <section class="inputs">
+    <label id="dobLbl">Date of Birth / பிறந்த தேதி:
+      <input type="date" id="dob">
+    </label>
+    <label id="tobLbl">Time of Birth / பிறந்த நேரம்:
+      <input type="time" id="tob" step="1">
+    </label>
+    <label id="placeLbl">Place / இடம்:
+      <input type="text" id="place" placeholder="City, Country">
+    </label>
+    <label id="tzLbl">Time Zone / நேர வலயம்:
+      <select id="timezone"></select>
+    </label>
+    <label><input type="checkbox" id="dst"> DST / நேர மாற்றம் செய்</label>
+    <button id="generate">Generate Horoscope / ஜாதகம் உருவாக்கு</button>
+  </section>
+
+  <canvas id="chart" width="500" height="500" title="Click any house to assign or view planets"></canvas>
+
+  <div>
+    <button onclick="analyze()">Find Shelter Provider / சரண தந்தை கண்டறி</button>
+    <button onclick="resetChart()">Reset / மீட்டமை</button>
   </div>
 
-  <!-- Birth Data form -->
-  <div id="bForm">
-    <div class="fg"><label>Date of birth</label><input type="date" id="dob"></div>
-    <div class="fg"><label>Time of birth (local time)</label><input type="time" id="tob" value="12:00"></div>
-    <div class="fg">
-      <label>Timezone offset from UTC</label>
-      <select id="tz">
-        <option value="5.5" selected>+5:30 India (IST)</option>
-        <option value="0">+0:00 UTC / London</option>
-        <option value="1">+1:00 Central Europe</option>
-        <option value="2">+2:00 Eastern Europe</option>
-        <option value="3">+3:00 Gulf / Moscow</option>
-        <option value="4">+4:00 Dubai</option>
-        <option value="6">+6:00 Bangladesh</option>
-        <option value="7">+7:00 Thailand</option>
-        <option value="8">+8:00 Singapore / China</option>
-        <option value="-5">-5:00 US Eastern</option>
-        <option value="-6">-6:00 US Central</option>
-        <option value="-7">-7:00 US Mountain</option>
-        <option value="-8">-8:00 US Pacific</option>
-      </select>
-    </div>
-    <button class="gbtn" onclick="calcBirth()">Calculate Horoscope &amp; Trace Shelter Chain</button>
-    <div id="cErr" class="err"></div>
-    <div class="disc">Calculated in-browser using Lahiri ayanamsa. Positions are approximate — verify with professional Vedic software for exact degrees.</div>
-  </div>
+  <div id="result"></div>
 
-  <!-- Manual mode hint -->
-  <div id="mHint" class="hint" style="display:none;">Click any house cell to assign Lagna and planets. Rahu/Ketu auto-place in opposite signs.</div>
-
-  <!-- Kattam -->
-  <div id="kW" style="display:none;">
-    <div id="calcResult"></div>
-    <div class="kattam" id="kattam"></div>
-  </div>
-  <div id="pDiv" style="display:none;"></div>
-  <div id="rDiv"></div>
-</div>
+  <footer>
+    <p>Luck Enabler © 2024 — Works with Lahiri Ayanamsa (Vedic Method)</p>
+  </footer>
 
 <script>
-/* ─── DATA ─────────────────────────────────────────────────────────── */
-const RA=[
-  {n:1,nm:"Mesha",t:"மேஷம்",l:"Mars"},
-  {n:2,nm:"Rishabha",t:"ரிஷபம்",l:"Venus"},
-  {n:3,nm:"Mithuna",t:"மிதுனம்",l:"Mercury"},
-  {n:4,nm:"Kataka",t:"கடகம்",l:"Moon"},
-  {n:5,nm:"Simha",t:"சிம்மம்",l:"Sun"},
-  {n:6,nm:"Kanni",t:"கன்னி",l:"Mercury"},
-  {n:7,nm:"Thulam",t:"துலாம்",l:"Venus"},
-  {n:8,nm:"Vrischika",t:"விருச்சிகம்",l:"Mars"},
-  {n:9,nm:"Dhanus",t:"தனுசு",l:"Jupiter"},
-  {n:10,nm:"Makara",t:"மகரம்",l:"Saturn"},
-  {n:11,nm:"Kumbha",t:"கும்பம்",l:"Saturn"},
-  {n:12,nm:"Meena",t:"மீனம்",l:"Jupiter"}
-];
-const OWN={Sun:[5],Moon:[4],Mars:[1,8],Mercury:[3,6],Jupiter:[9,12],Venus:[2,7],Saturn:[10,11],Rahu:[],Ketu:[]};
-const PL=["Sun","Moon","Mars","Mercury","Jupiter","Venus","Saturn","Rahu","Ketu"];
-const PS={Sun:"Su",Moon:"Mo",Mars:"Ma",Mercury:"Bu",Jupiter:"Gu",Venus:"Sk",Saturn:"Sa",Rahu:"Ra",Ketu:"Ke"};
-const PT={Sun:"சூரியன்",Moon:"சந்திரன்",Mars:"செவ்வாய்",Mercury:"புதன்",Jupiter:"குரு",Venus:"சுக்கிரன்",Saturn:"சனி",Rahu:"ராகு",Ketu:"கேது"};
-const GP={12:{r:1,c:1},1:{r:1,c:2},2:{r:1,c:3},3:{r:1,c:4},4:{r:2,c:4},5:{r:3,c:4},6:{r:4,c:4},7:{r:4,c:3},8:{r:4,c:2},9:{r:4,c:1},10:{r:3,c:1},11:{r:2,c:1}};
-const DI={
-  Sun:{d:["Lord Shiva","Lord Rama"],t:["Suryanar Koil","Arunachaleswarar","Thiruvannamalai"],m:"Om Hreem Suryaya Namaha",i:"Sun rules soul and authority. Shiva worship removes ego and bestows divine leadership and vitality."},
-  Moon:{d:["Lord Shiva","Goddess Parvati"],t:["Thingalur","Kailasanathar","Chidambaram"],m:"Om Som Somaya Namaha",i:"Moon governs mind and emotions. Shiva-Parvati worship brings mental peace, clarity and domestic harmony."},
-  Mars:{d:["Lord Murugan","Lord Subramania"],t:["Palani","Thiruparankundram","Swamimalai"],m:"Om Saravana Bhava",i:"Mars governs courage, property and siblings. Murugan worship removes enemies and obstacles, blessing with strength and protection."},
-  Mercury:{d:["Lord Maha Vishnu","Lord Krishna"],t:["Thiruvidandai","Guruvayur","Kanchipuram"],m:"Om Namo Narayanaya",i:"Mercury governs intellect, speech and commerce. Vishnu worship brings clarity, wisdom and prosperity."},
-  Jupiter:{d:["Lord Dakshinamurthy","Lord Ranganathar","Siddhar worship"],t:["Srirangam","Alagar Koil","Chidambaram","Vaitheeswaran Koil"],m:"Om Dakshinamurthaye Namaha",i:"Jupiter governs wisdom, dharma, children and wealth. Guru Bhagavan and Siddhar worship opens divine grace, righteous income through arts, teaching and astrology."},
-  Venus:{d:["Goddess Mahalakshmi","Goddess Ashtalakshmi"],t:["Ashtalakshmi Koil","Kanchipuram Kamakshi","Mahalakshmi Temple"],m:"Om Shreem Mahalakshmiyei Namaha",i:"Venus governs art, beauty, relationships and luxury. Lakshmi worship brings harmony, creativity and material abundance."},
-  Saturn:{d:["Lord Ayyappa","Lord Shani","Lord Murugan"],t:["Sabarimala","Thirunallar","Kusasthalai"],m:"Om Shri Shanaischaraya Namaha",i:"Saturn governs karma, discipline and longevity. Ayyappa and Shani worship reduces delays, obstacles and karmic burdens."},
-  Rahu:{d:["Goddess Durga","Lord Nagaraja"],t:["Thirunageswaram","Srikalahasti"],m:"Om Rahave Namaha",i:"Rahu amplifies desires and illusions. Durga and Naga worship dispels confusion, removes hidden enemies and grants material success."},
-  Ketu:{d:["Lord Ganesha","Lord Skanda"],t:["Keezhperumpallam","Pillayarpatti","Suchindram"],m:"Om Ketave Namaha",i:"Ketu governs liberation and past karma. Ganesha worship removes inherited obstacles and opens the path to wisdom."}
+// === Initialize timezone dropdown ===
+window.onload = function() {
+  moment.tz.names().forEach(tz=>{
+    const opt=document.createElement("option");
+    opt.value=tz; opt.textContent=tz;
+    document.getElementById("timezone").appendChild(opt);
+  });
+  drawGrid();
 };
 
-/* ─── ASTRONOMY ENGINE (Lahiri Ayanamsa, approximate) ─────────────── */
-function toJD(year,month,day,hour){
-  if(month<=2){year--;month+=12;}
-  const A=Math.floor(year/100),B=2-A+Math.floor(A/4);
-  return Math.floor(365.25*(year+4716))+Math.floor(30.6001*(month+1))+day+hour/24+B-1524.5;
-}
-function norm360(x){return((x%360)+360)%360;}
-function norm(x){return((x%1)+1)%1;}
-
-function lahiriAyanamsa(jd){
-  const T=(jd-2451545.0)/36525.0;
-  return 23.85694 + 0.013004*T - 0.000164*(T*T);
-}
-
-function calcLagna(jd,lat,lon){
-  const T=(jd-2451545.0)/36525.0;
-  const RAMC=norm360(100.4606184+36000.7700536*T+0.000387933*(T*T)+lon);
-  const eps=23.4392911-0.013004167*T;
-  const epsR=eps*Math.PI/180;
-  const ramcR=RAMC*Math.PI/180;
-  const latR=lat*Math.PI/180;
-  const asc=Math.atan2(Math.cos(ramcR), -(Math.sin(ramcR)*Math.cos(epsR)+Math.tan(latR)*Math.sin(epsR)));
-  let ascDeg=norm360(asc*180/Math.PI);
-  const ayan=lahiriAyanamsa(jd);
-  ascDeg=norm360(ascDeg-ayan);
-  return Math.floor(ascDeg/30)+1;
-}
-
-function sunLon(jd){
-  const T=(jd-2451545.0)/36525.0;
-  const L0=norm360(280.46646+36000.76983*T);
-  const M=norm360(357.52911+35999.05029*T)*Math.PI/180;
-  const C=(1.914602-0.004817*T-0.000014*T*T)*Math.sin(M)+(0.019993-0.000101*T)*Math.sin(2*M)+0.000289*Math.sin(3*M);
-  return norm360(L0+C);
-}
-function moonLon(jd){
-  const T=(jd-2451545.0)/36525.0;
-  const L=norm360(218.3165+481267.8813*T);
-  const M=norm360(134.9634+477198.8676*T)*Math.PI/180;
-  const Mp=norm360(357.5291+35999.0503*T)*Math.PI/180;
-  const D=norm360(297.8502+445267.1115*T)*Math.PI/180;
-  const F=norm360(93.2721+483202.0175*T)*Math.PI/180;
-  const corr=6.2888*Math.sin(M)+1.2740*Math.sin(2*D-M)+0.6583*Math.sin(2*D)+0.2136*Math.sin(2*M)-0.1851*Math.sin(Mp)-0.1143*Math.sin(2*F)+0.0588*Math.sin(2*D-2*M)+0.0572*Math.sin(2*D-Mp-M)+0.0533*Math.sin(2*D+Mp);
-  return norm360(L+corr);
-}
-function planetLon(jd,L0,rate,M0,Mrate,ecc,eqCenter){
-  const T=(jd-2451545.0)/36525.0;
-  const L=norm360(L0+rate*T);
-  const M=norm360(M0+Mrate*T)*Math.PI/180;
-  const v=M+eqCenter*Math.sin(M)+ecc*Math.sin(2*M);
-  return norm360(L-M*180/Math.PI+v*180/Math.PI+Math.random()*0);
-}
-function rahuLon(jd){
-  const T=(jd-2451545.0)/36525.0;
-  return norm360(125.0445-1934.1363*T+0.002*T*T);
-}
-
-function computePlanets(jd,lat,lon){
-  const ayan=lahiriAyanamsa(jd);
-  const sid=x=>Math.floor(norm360(x-ayan)/30)+1;
-  const sunL=sunLon(jd);
-  const moonL=moonLon(jd);
-  const T=(jd-2451545.0)/36525.0;
-  const marsL=norm360(355.433+19140.2993*T+1.8497*Math.sin((19.373+21191.179*T)*Math.PI/180));
-  const mercL=norm360(252.251+149474.0720*T+23.4400*Math.sin((206.047+146594.0*T)*Math.PI/180));
-  const jupL=norm360(34.396+3034.9057*T+5.5549*Math.sin((20.021+21.329*T)*Math.PI/180));
-  const venL=norm360(181.979+58519.213*T+0.7758*Math.sin((212.448+58517.803*T)*Math.PI/180));
-  const satL=norm360(50.077+1222.1138*T+6.3585*Math.sin((169.651+1219.553*T)*Math.PI/180));
-  const raL=rahuLon(jd);
-  const lagna=calcLagna(jd,lat,lon);
-  return{
-    lagna,
-    planets:{
-      Sun:sid(sunL),Moon:sid(moonL),Mars:sid(marsL),Mercury:sid(mercL),
-      Jupiter:sid(jupL),Venus:sid(venL),Saturn:sid(satL),
-      Rahu:sid(raL),Ketu:((sid(raL)+5)%12)+1
-    },
-    degrees:{Sun:sunL,Moon:moonL,Mars:marsL,Mercury:mercL,Jupiter:jupL,Venus:venL,Saturn:satL,Rahu:raL}
-  };
-}
-
-/* ─── STATE ─────────────────────────────────────────────────────────── */
-let mode='birth', chart={lagna:null,planets:{}}, sel=null;
-
-/* ─── CHAIN LOGIC ───────────────────────────────────────────────────── */
-function buildChain(){
-  if(!chart.lagna) return null;
-  const lr=RA[chart.lagna-1];
-  const chain=[{planet:lr.l,rashiN:chart.lagna,rashiNm:lr.nm,houseNum:1,role:'lagna',breakType:null}];
-  const visited=new Set([lr.l]);
-  let cur=lr.l;
-  for(let i=0;i<10;i++){
-    const pl=chart.planets[cur];
-    if(!pl) break;
-    const pr=RA[pl-1],sl=pr.l,hn=((pl-chart.lagna+12)%12)+1;
-    const isSelf=(OWN[cur]||[]).includes(pl);
-    if(isSelf){chain.push({planet:sl,rashiN:pl,rashiNm:pr.nm,houseNum:hn,role:'self',breakType:'self'});break;}
-    if(visited.has(sl)){chain.push({planet:sl,rashiN:pl,rashiNm:pr.nm,houseNum:hn,role:'loop',breakType:'loop'});break;}
-    chain.push({planet:sl,rashiN:pl,rashiNm:pr.nm,houseNum:hn,role:'shelter',breakType:null});
-    visited.add(sl);cur=sl;
-  }
-  return chain;
-}
-
-/* ─── KATTAM RENDER ─────────────────────────────────────────────────── */
-function rK(){
-  const chain=buildChain()||[];
-  const cmap={};
-  chain.forEach((s,i)=>{if(i>0)cmap[s.planet]=i;});
-  const k=document.getElementById('kattam');k.innerHTML='';
-  const cc=document.createElement('div');
-  cc.className='rc cc';cc.style.gridColumn='2/4';cc.style.gridRow='2/4';
-  cc.innerHTML='<div style="font-size:11px;color:#888;line-height:1.5;">ஜாதகம்<br><span style="font-size:10px;">Rashi Kattam</span></div>';
-  k.appendChild(cc);
-  for(let rn=1;rn<=12;rn++){
-    const p=GP[rn],r=RA[rn-1],cell=document.createElement('div');
-    cell.className='rc';cell.style.gridColumn=p.c;cell.style.gridRow=p.r;
-    if(chart.lagna===rn)cell.classList.add('ilg');
-    if(sel===rn&&mode==='manual')cell.classList.add('sel');
-    if(mode==='manual'){cell.classList.add('clk');cell.onclick=(()=>{const x=rn;return()=>oP(x);})();}
-    const ph=PL.filter(pl=>chart.planets[pl]===rn);
-    const tags=ph.map(pl=>{const ci=cmap[pl];return`<span class="ptag${ci?` s${Math.min(ci,4)}`:''}">${PS[pl]}</span>`;}).join('');
-    cell.innerHTML=`<div class="rn">${r.t}</div><div class="pcs">${chart.lagna===rn?'<span class="ltag">Lg</span>':''}${tags}</div>`;
-    k.appendChild(cell);
+// === Language toggle ===
+let lang="bi";
+function toggleLang(){
+  if(lang==="bi"){
+    document.getElementById("title").innerText="Luck Enabler";
+    document.getElementById("subtitle").innerText="South Indian Horoscope & Shelter Finder";
+    lang="en";
+  } else {
+    document.getElementById("title").innerText="Luck Enabler — குருவே சரணம்";
+    document.getElementById("subtitle").innerText="தென் இந்திய ஜாதகம் மற்றும் சரண தேடல்";
+    lang="bi";
   }
 }
 
-/* ─── REPORT RENDER ─────────────────────────────────────────────────── */
-function sR(){
-  const rd=document.getElementById('rDiv');
-  if(!chart.lagna){rd.innerHTML='';return;}
-  const chain=buildChain();
-  if(!chain||chain.length<2){
-    const lr=RA[chart.lagna-1];
-    rd.innerHTML=`<div class="pm">Lagna: <strong>${lr.nm}</strong> — Lagnathipathi is <strong>${PT[lr.l]} (${lr.l})</strong>. Place this planet in a house to trace the shelter chain.</div>`;
-    return;
+// === Chart Drawing Setup ===
+const c=document.getElementById("chart");
+const ctx=c.getContext("2d");
+const size=500, box=size/3;
+let houses={};
+for(let i=1;i<=12;i++) houses[i]=[];
+
+function drawGrid(){
+  ctx.clearRect(0,0,size,size);
+  ctx.strokeStyle="#333"; ctx.lineWidth=1.2;
+  ctx.strokeRect(0,0,size,size);
+  for(let i=1;i<3;i++){
+    ctx.moveTo(i*box,0); ctx.lineTo(i*box,size);
+    ctx.moveTo(0,i*box); ctx.lineTo(size,i*box);
   }
-  let chainHTML='<div class="sectlbl">Shelter chain trace — சரணாலய சங்கிலி</div>';
-  chain.forEach((s,i)=>{
-    if(i>0)chainHTML+=`<div class="arr">↓</div>`;
-    let nc='snode';
-    if(i===0)nc+=' lg';else if(s.breakType==='self')nc+=' sf';else if(s.breakType==='loop')nc+=' lp';else nc+=' sh';
-    const lbl=i===0?'Lagna · Lagnathipathi':`Shelter provider ${i}`;
-    const loc=i===0?`${s.rashiNm} (Lagna)`:`House ${s.houseNum} · ${s.rashiNm}`;
-    const badge=s.breakType==='self'?`<span class="bbdg bself">Self-shelter — chain ends here</span>`:s.breakType==='loop'?`<span class="bbdg bloop">Loop — chain ends here</span>`:'';
-    chainHTML+=`<div class="${nc}"><div class="nlbl">${lbl}</div><div class="npl">${PT[s.planet]} <span style="font-size:12px;font-weight:400;color:#777;">(${s.planet})</span></div><div class="nrs">${loc}</div>${badge}</div>`;
-  });
-  const last=chain[chain.length-1];
-  const chainStr=chain.map(s=>s.planet).join(' → ');
-  let brk='';
-  if(last.breakType==='self')brk=`${last.planet} is in its own sign (${last.rashiNm}) — self-shelter achieved`;
-  else if(last.breakType==='loop')brk=`${last.planet} loops back to a planet already in the chain`;
-  else brk=`${last.planet} has no placement yet — enter it to continue tracing`;
-  const seen=new Set(),dPl=[];
-  chain.forEach((s,i)=>{if(!seen.has(s.planet)){seen.add(s.planet);dPl.push({planet:s.planet,step:i});}});
-  const DC=['d0','d1','d2','d3','d4'];
-  let dHTML=`<div class="sectlbl" style="margin-top:1.25rem;">Deities to worship — வணங்க வேண்டிய தெய்வங்கள்</div>`;
-  dPl.forEach(({planet,step})=>{
-    const info=DI[planet],dc=DC[Math.min(step,4)],sl=step===0?'Lagnathipathi':`Shelter ${step}`;
-    dHTML+=`<div class="dcard"><div class="dbadge ${dc}">${step===0?'L':step}</div><div class="dbody"><div class="dplnt">${sl} · ${PT[planet]} (${planet})</div><div class="dname">${info.d.join(' &amp; ')}</div><div class="dtags">${info.t.map(t=>`<span class="dtag">${t}</span>`).join('')}</div><div class="dmtr">${info.m}</div><div class="dins">${info.i}</div></div></div>`;
-  });
-  rd.innerHTML=chainHTML+`<div class="sumbox"><div class="sumlbl">Full shelter chain</div><div class="sumchain">${chainStr}</div><div class="sumbrk">${brk}</div></div>`+dHTML;
+  ctx.stroke();
+  ctx.font="14px Arial"; ctx.fillStyle="#933";
+  for(let i=1;i<=12;i++){
+    const x=((i-1)%3)*box+5, y=Math.floor((i-1)/3)*box+18;
+    ctx.fillText(i,x,y);
+    if(houses[i].length) ctx.fillText(houses[i].join(','),x+20,y+20);
+  }
 }
 
-/* ─── PICKER ─────────────────────────────────────────────────────────── */
-function oP(rn){
-  sel=rn;rK();
-  const r=RA[rn-1],isLg=chart.lagna===rn,ph=PL.filter(pl=>chart.planets[pl]===rn);
-  const pd=document.getElementById('pDiv');pd.style.display='block';
-  pd.innerHTML=`<div class="picker"><div class="pk-title">${r.t} (${r.nm}) · Rashi ${rn}</div><div class="pb">
-    <button class="${isLg?'lon':''}" onclick="tLg(${rn})">லக்னம் (Lagna)</button>
-    ${PL.map(pl=>`<button class="${ph.includes(pl)?'on':''}" onclick="tPl('${pl}',${rn})">${PT[pl]} (${PS[pl]})</button>`).join('')}
-  </div></div>`;
-}
-function tLg(rn){chart.lagna=chart.lagna===rn?null:rn;oP(rn);rK();sR();}
-function tPl(pl,rn){
-  const op=rn<=6?rn+6:rn-6;
-  if(chart.planets[pl]===rn){delete chart.planets[pl];if(pl==='Rahu')delete chart.planets['Ketu'];if(pl==='Ketu')delete chart.planets['Rahu'];}
-  else{chart.planets[pl]=rn;if(pl==='Rahu')chart.planets['Ketu']=op;if(pl==='Ketu')chart.planets['Rahu']=op;}
-  oP(rn);rK();sR();
+// === Click to assign planets manually ===
+c.addEventListener("click",function(e){
+  const rect=c.getBoundingClientRect();
+  const x=e.clientX-rect.left, y=e.clientY-rect.top;
+  const col=Math.floor(x/box), row=Math.floor(y/box);
+  const h=row*3+col+1;
+  const pl=prompt("Enter planet for house "+h+" (Sun, Moon, Mars...)");
+  if(pl){houses[h].push(pl.trim()); drawGrid();}
+});
+
+// === Reset chart ===
+function resetChart(){for(let i=1;i<=12;i++) houses[i]=[]; drawGrid(); document.getElementById('result').innerHTML='';}
+
+// === Horoscope generation ===
+document.getElementById("generate").addEventListener("click",generateChart);
+
+async function generateChart(){
+  const dob=document.getElementById("dob").value;
+  const tob=document.getElementById("tob").value;
+  const place=document.getElementById("place").value;
+  const tz=document.getElementById("timezone").value;
+  if(!dob||!tob||!place||!tz){alert("Please enter all details / தகவல் பூர்த்தி செய்");return;}
+  const dst=document.getElementById("dst").checked;
+
+  swe.set_ephe_path("js/ephe");
+  const local=moment.tz(`${dob} ${tob}`,tz);
+  const jdut=swe.utc_to_jd(local.year(),local.month()+1,local.date(),local.hour()-(dst?1:0),local.minute(),local.second(),'UT')[0];
+  const ayan=swe.get_ayanamsa(jdut,swe.SE_SIDM_LAHIRI).ayan_t;
+
+  const planets=['SUN','MOON','MERCURY','VENUS','MARS','JUPITER','SATURN','RAHU','KETU'];
+  resetChart();
+  for(let p of planets){
+    const v=swe.calc_ut(jdut,swe[`SE_${p}`],swe.FLAGS.SIDEREAL+swe.FLAGS.LAHIRI);
+    const lon=v.longitude-ayan; const deg=(lon<0)?lon+360:lon; const r=Math.floor(deg/30)+1;
+    houses[r].push(p.charAt(0));
+  }
+  drawGrid();
 }
 
-/* ─── MODE SWITCH ────────────────────────────────────────────────────── */
-function sMode(m){
-  mode=m;
-  document.querySelectorAll('.tab').forEach((t,i)=>t.classList.toggle('on',(i===0&&m==='birth')||(i===1&&m==='manual')));
-  document.getElementById('bForm').style.display=m==='birth'?'block':'none';
-  document.getElementById('mHint').style.display=m==='manual'?'block':'none';
-  if(m==='manual'){chart={lagna:null,planets:{}};sel=null;document.getElementById('kW').style.display='block';document.getElementById('pDiv').style.display='none';document.getElementById('rDiv').innerHTML='';document.getElementById('calcResult').innerHTML='';rK();}
-  else if(!chart.lagna)document.getElementById('kW').style.display='none';
-}
+// === Shelter Provider Finder ===
+function analyze(){
+  const lagnaHouse=prompt(lang==='en'?"Enter Lagna number (1–12):":"லக்னம் எண் (1–12):");
+  const n=parseInt(lagnaHouse);
+  if(!n||n<1||n>12){alert("Invalid Lagna / தவறான லக்னம்");return;}
+  const lords=[
+    {sign:"Aries", lord:"Mars", deity:"Muruga/Subramanya"},
+    {sign:"Taurus", lord:"Venus", deity:"Lakshmi"},
+    {sign:"Gemini", lord:"Mercury", deity:"Vishnu"},
+    {sign:"Cancer", lord:"Moon", deity:"Parvati"},
+    {sign:"Leo", lord:"Sun", deity:"Shiva"},
+    {sign:"Virgo", lord:"Mercury", deity:"Vishnu"},
+    {sign:"Libra", lord:"Venus", deity:"Lakshmi"},
+    {sign:"Scorpio", lord:"Mars", deity:"Subramanya"},
+    {sign:"Sagittarius", lord:"Jupiter", deity:"Dakshinamurti"},
+    {sign:"Capricorn", lord:"Saturn", deity:"Hanuman"},
+    {sign:"Aquarius", lord:"Saturn", deity:"Hanuman"},
+    {sign:"Pisces", lord:"Jupiter", deity:"Dakshinamurti"}
+  ];
 
-/* ─── BIRTH CALC (pure JS) ───────────────────────────────────────────── */
-function calcBirth(){
-  const dob=document.getElementById('dob').value,tob=document.getElementById('tob').value;
-  const tzOff=parseFloat(document.getElementById('tz').value);
-  const err=document.getElementById('cErr');
-  if(!dob||!tob){err.textContent='Please enter date and time of birth.';return;}
-  err.textContent='';
-  const [y,mo,d]=dob.split('-').map(Number);
-  const [h,mi]=tob.split(':').map(Number);
-  const utcHour=(h+mi/60)-tzOff;
-  let dy=d,moy=mo,yr=y;
-  let adjHour=utcHour;
-  if(adjHour<0){adjHour+=24;dy--;} else if(adjHour>=24){adjHour-=24;dy++;}
-  const jd=toJD(yr,moy,dy,adjHour);
-  // Use IST lat/lon as approximate (Salem, Tamil Nadu)
-  const lat=11.65, lon=78.16;
-  const res=computePlanets(jd,lat,lon);
-  chart={lagna:res.lagna,planets:res.planets};sel=null;
-  const pNames=Object.keys(res.planets);
-  let tblHTML=`<div class="sectlbl">Calculated chart</div><table class="planet-table"><tr><th>Planet</th><th>Rashi</th><th>Sign</th></tr>`;
-  tblHTML+=`<tr><td><strong>Lagna</strong></td><td>${chart.lagna}</td><td><strong>${RA[chart.lagna-1].nm} (${RA[chart.lagna-1].t})</strong></td></tr>`;
-  pNames.forEach(pl=>{const rn=res.planets[pl];tblHTML+=`<tr><td>${PT[pl]} (${pl})</td><td>${rn}</td><td>${RA[rn-1].nm} (${RA[rn-1].t})</td></tr>`;});
-  tblHTML+=`</table><p class="calc-note">Calculated using built-in Lahiri ayanamsa engine (approximate ±1–2 rashis for fast planets near sign borders). Use Manual Entry to correct if needed.</p>`;
-  document.getElementById('calcResult').innerHTML=tblHTML;
-  document.getElementById('kW').style.display='block';
-  document.getElementById('pDiv').style.display='none';
-  rK();sR();
+  const l=lords[n-1];
+  const msgEN=`<h3>Ascendant: ${l.sign}</h3><p><b>Lagnathipathi:</b> ${l.lord}</p><p><b>Shelter Provider:</b> ${l.deity}</p>`;
+  const msgTA=`<h3>லக்னம்: ${l.sign}</h3><p><b>லக்ன அதிபதி:</b> ${l.lord}</p><p><b>சரண தெய்வம்:</b> ${l.deity}</p>`;
+  document.getElementById("result").innerHTML=(lang==='en'?msgEN:msgTA);
 }
-
-rK();
 </script>
 </body>
 </html>
