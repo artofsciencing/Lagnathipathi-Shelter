@@ -1,191 +1,136 @@
 <!DOCTYPE html>
 <html lang="ta">
 <head>
-  <meta charset="UTF-8">
-  <title>Luck Enabler — குருவே சரணம்</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link href="[fonts.googleapis.com](https://fonts.googleapis.com/css2?family=Noto+Sans+Tamil&display=swap)" rel="stylesheet">
-
-  <style>
-    body {
-      font-family: 'Noto Sans Tamil', sans-serif;
-      background:#fdf9f2; color:#222; text-align:center; margin:0; padding:0;
-    }
-    header { background:#933; color:#fff; padding:10px 0; }
-    h1 { margin:0; font-size:1.6em; }
-    h2 { color:#fff7ee; margin:5px 0 10px; font-size:1em; }
-    .inputs {
-      display:flex; flex-wrap:wrap; justify-content:center; gap:10px;
-      margin:15px auto; max-width:650px; background:#fff6ee; border-radius:6px; padding:10px;
-    }
-    label { display:flex; flex-direction:column; font-size:0.9em; }
-    input, select, button {
-      font-size:1em; padding:5px; border:1px solid #aaa; border-radius:4px;
-    }
-    canvas { border:1px solid #666; background:#fff; margin:20px auto; display:block; cursor:pointer; }
-    #result {
-      margin:10px auto; padding:10px; background:#fff; max-width:550px;
-      border:1px solid #caa; border-radius:6px;
-    }
-    footer { margin:15px; font-size:0.9em; color:#555; }
-    .langBtn { background:#933; color:#fff; border:none; border-radius:4px; padding:5px 10px; cursor:pointer; }
-  </style>
-
-  <script src="js/moment.min.js"></script>
-  <script src="js/moment-timezone.min.js"></script>
-  <script src="js/swisseph.min.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Luck Enabler — குருவே சரணம்</title>
+<style>
+body{font-family:'Noto Sans Tamil',sans-serif;background:#fbf7f0;color:#222;text-align:center;margin:0}
+header{background:#933;color:#fff;padding:10px 0}
+h1{margin:0;font-size:1.5em}
+h2{margin:5px 0 10px;font-weight:400}
+section{margin:10px auto;max-width:600px;background:#fff6ee;padding:10px;border-radius:6px}
+label{display:block;margin:5px auto}
+input,select,button{padding:5px;font-size:1em;border:1px solid #aaa;border-radius:4px}
+canvas{border:1px solid #333;background:#fff;margin:15px auto;display:block}
+.langBtn{background:#933;color:#fff;border:none;padding:5px 10px;border-radius:5px;cursor:pointer}
+#result{max-width:500px;margin:10px auto;background:#fff;border:1px solid #d9b;border-radius:5px;padding:8px}
+footer{font-size:.85em;color:#666;margin:25px}
+</style>
 </head>
-
 <body>
-  <header>
-    <h1 id="title">Luck Enabler — குருவே சரணம்</h1>
-    <h2 id="subtitle">South Indian Birth Horoscope and Shelter Finder · தென் இந்திய ஜாதக கணிப்பு மற்றும் சரண தேடல்</h2>
-    <button class="langBtn" onclick="toggleLang()">தமிழ் / English</button>
-  </header>
+<header>
+  <h1 id="title">Luck Enabler — குருவே சரணம்</h1>
+  <h2 id="subtitle">South Indian Horoscope & Shelter Finder · தென் இந்திய ஜாதகம் மற்றும் சரண அளிப்பவர் தேடல்</h2>
+  <button class="langBtn" onclick="toggleLang()">தமிழ் / English</button>
+</header>
 
-  <section class="inputs">
-    <label id="dobLbl">Date of Birth / பிறந்த தேதி:
-      <input type="date" id="dob">
-    </label>
-    <label id="tobLbl">Time of Birth / பிறந்த நேரம்:
-      <input type="time" id="tob" step="1">
-    </label>
-    <label id="placeLbl">Place / இடம்:
-      <input type="text" id="place" placeholder="City, Country">
-    </label>
-    <label id="tzLbl">Time Zone / நேர வலயம்:
-      <select id="timezone"></select>
-    </label>
-    <label><input type="checkbox" id="dst"> DST / நேர மாற்றம் செய்</label>
-    <button id="generate">Generate Horoscope / ஜாதகம் உருவாக்கு</button>
-  </section>
+<section>
+  <label>Date of Birth / பிறந்த தேதி : <input type="date" id="dob"></label>
+  <label>Time / நேரம் : <input type="time" id="tob" step="1"></label>
+  <label>Place / இடம் : <input id="place" placeholder="City"></label>
+  <label>Time Zone / நேர வலயம் : 
+    <select id="timezone">
+      <option value="">-- Select / தேர்வு --</option>
+      <option>Asia/Kolkata</option><option>Asia/Colombo</option>
+      <option>Asia/Dubai</option><option>Europe/London</option>
+      <option>America/New_York</option><option>Australia/Sydney</option>
+    </select>
+  </label><br>
+  <button onclick="drawChart()">Generate Horoscope / ஜாதகம் உருவாக்கு</button>
+</section>
 
-  <canvas id="chart" width="500" height="500" title="Click any house to assign or view planets"></canvas>
+<canvas id="chart" width="480" height="480"></canvas>
 
-  <div>
-    <button onclick="analyze()">Find Shelter Provider / சரண தந்தை கண்டறி</button>
-    <button onclick="resetChart()">Reset / மீட்டமை</button>
-  </div>
+<div>
+  <button onclick="findShelter()">Find Shelter Provider / சரண அளிப்பவர் கண்டறி</button>
+  <button onclick="resetChart()">Reset / மீட்டமை</button>
+</div>
 
-  <div id="result"></div>
-
-  <footer>
-    <p>Luck Enabler © 2024 — Works with Lahiri Ayanamsa (Vedic Method)</p>
-  </footer>
+<div id="result"></div>
+<footer>Luck Enabler © 2024 Standalone Edition</footer>
 
 <script>
-// === Initialize timezone dropdown ===
-window.onload = function() {
-  moment.tz.names().forEach(tz=>{
-    const opt=document.createElement("option");
-    opt.value=tz; opt.textContent=tz;
-    document.getElementById("timezone").appendChild(opt);
-  });
-  drawGrid();
-};
-
-// === Language toggle ===
 let lang="bi";
 function toggleLang(){
-  if(lang==="bi"){
-    document.getElementById("title").innerText="Luck Enabler";
-    document.getElementById("subtitle").innerText="South Indian Horoscope & Shelter Finder";
+  if(lang==="bi"){document.getElementById("title").innerText="Luck Enabler";
+    document.getElementById("subtitle").innerText="South Indian Horoscope and Shelter Finder";
     lang="en";
   } else {
-    document.getElementById("title").innerText="Luck Enabler — குருவே சரணம்";
-    document.getElementById("subtitle").innerText="தென் இந்திய ஜாதகம் மற்றும் சரண தேடல்";
+    document.getElementById("title").innerText="Luck Enabler — குருவே சரணம்";
+    document.getElementById("subtitle").innerText="தென் இந்திய ஜாதகம் மற்றும் சரண அளிப்பவர் தேடல்";
     lang="bi";
   }
 }
 
-// === Chart Drawing Setup ===
-const c=document.getElementById("chart");
-const ctx=c.getContext("2d");
-const size=500, box=size/3;
-let houses={};
-for(let i=1;i<=12;i++) houses[i]=[];
-
-function drawGrid(){
+const c=document.getElementById("chart"),ctx=c.getContext("2d");
+const size=c.width;let houses={};for(let i=1;i<=12;i++)houses[i]=[];
+function drawChart(){
   ctx.clearRect(0,0,size,size);
-  ctx.strokeStyle="#333"; ctx.lineWidth=1.2;
-  ctx.strokeRect(0,0,size,size);
-  for(let i=1;i<3;i++){
-    ctx.moveTo(i*box,0); ctx.lineTo(i*box,size);
-    ctx.moveTo(0,i*box); ctx.lineTo(size,i*box);
+  ctx.strokeStyle="#222";ctx.lineWidth=1.2;
+  const cx=size/2,cy=size/2,r=size/2-25;
+  // draw 12 fixed houses
+  for(let i=0;i<12;i++){
+    const ang=(Math.PI/6)*i;
+    const x=cx+r*Math.cos(ang),y=cy+r*Math.sin(ang);
+    ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(x,y);ctx.stroke();
   }
-  ctx.stroke();
-  ctx.font="14px Arial"; ctx.fillStyle="#933";
-  for(let i=1;i<=12;i++){
-    const x=((i-1)%3)*box+5, y=Math.floor((i-1)/3)*box+18;
-    ctx.fillText(i,x,y);
-    if(houses[i].length) ctx.fillText(houses[i].join(','),x+20,y+20);
+  ctx.beginPath();ctx.arc(cx,cy,r,0,2*Math.PI);ctx.stroke();
+  // mark sign names
+  const names=[["Aries","மேஷம்"],["Taurus","ரிஷபம்"],["Gemini","மிதுனம்"],["Cancer","கடகம்"],
+  ["Leo","சிம்மம்"],["Virgo","கன்னி"],["Libra","துலாம்"],["Scorpio","விருச்சிகம்"],
+  ["Sagittarius","தனுசு"],["Capricorn","மகரம்"],["Aquarius","கும்பம்"],["Pisces","மீனம்"]];
+  ctx.font="12px Noto Sans Tamil";ctx.fillStyle="#933";
+  for(let i=0;i<12;i++){
+    const ang=(Math.PI/6)*(i+0.5);
+    const x=cx+(r*0.7)*Math.cos(ang),y=cy+(r*0.7)*Math.sin(ang);
+    const t=(lang==="en")?names[i][0]:names[i][1];
+    ctx.fillText(t,x-20,y);
   }
 }
 
-// === Click to assign planets manually ===
-c.addEventListener("click",function(e){
+c.addEventListener("click",e=>{
   const rect=c.getBoundingClientRect();
-  const x=e.clientX-rect.left, y=e.clientY-rect.top;
-  const col=Math.floor(x/box), row=Math.floor(y/box);
-  const h=row*3+col+1;
-  const pl=prompt("Enter planet for house "+h+" (Sun, Moon, Mars...)");
-  if(pl){houses[h].push(pl.trim()); drawGrid();}
+  const x=e.clientX-rect.left-size/2,y=e.clientY-rect.top-size/2;
+  let ang=Math.atan2(y,x);if(ang<0)ang+=2*Math.PI;
+  const h=Math.floor(ang/(Math.PI/6))+1;
+  const p=prompt("Enter planet for House "+h+" (e.g. Sun)");
+  if(p){houses[h].push(p);drawChart();placePlanets();}
 });
 
-// === Reset chart ===
-function resetChart(){for(let i=1;i<=12;i++) houses[i]=[]; drawGrid(); document.getElementById('result').innerHTML='';}
-
-// === Horoscope generation ===
-document.getElementById("generate").addEventListener("click",generateChart);
-
-async function generateChart(){
-  const dob=document.getElementById("dob").value;
-  const tob=document.getElementById("tob").value;
-  const place=document.getElementById("place").value;
-  const tz=document.getElementById("timezone").value;
-  if(!dob||!tob||!place||!tz){alert("Please enter all details / தகவல் பூர்த்தி செய்");return;}
-  const dst=document.getElementById("dst").checked;
-
-  swe.set_ephe_path("js/ephe");
-  const local=moment.tz(`${dob} ${tob}`,tz);
-  const jdut=swe.utc_to_jd(local.year(),local.month()+1,local.date(),local.hour()-(dst?1:0),local.minute(),local.second(),'UT')[0];
-  const ayan=swe.get_ayanamsa(jdut,swe.SE_SIDM_LAHIRI).ayan_t;
-
-  const planets=['SUN','MOON','MERCURY','VENUS','MARS','JUPITER','SATURN','RAHU','KETU'];
-  resetChart();
-  for(let p of planets){
-    const v=swe.calc_ut(jdut,swe[`SE_${p}`],swe.FLAGS.SIDEREAL+swe.FLAGS.LAHIRI);
-    const lon=v.longitude-ayan; const deg=(lon<0)?lon+360:lon; const r=Math.floor(deg/30)+1;
-    houses[r].push(p.charAt(0));
+function placePlanets(){
+  const cx=size/2,cy=size/2,r=size/2-40;
+  ctx.font="14px Arial";ctx.fillStyle="#111";
+  for(let i=1;i<=12;i++){
+    if(houses[i].length){
+      const ang=(Math.PI/6)*(i-0.5);
+      const x=cx+(r*0.5)*Math.cos(ang),y=cy+(r*0.5)*Math.sin(ang);
+      ctx.fillText(houses[i].join(','),x-10,y);
+    }
   }
-  drawGrid();
 }
 
-// === Shelter Provider Finder ===
-function analyze(){
-  const lagnaHouse=prompt(lang==='en'?"Enter Lagna number (1–12):":"லக்னம் எண் (1–12):");
-  const n=parseInt(lagnaHouse);
-  if(!n||n<1||n>12){alert("Invalid Lagna / தவறான லக்னம்");return;}
-  const lords=[
-    {sign:"Aries", lord:"Mars", deity:"Muruga/Subramanya"},
-    {sign:"Taurus", lord:"Venus", deity:"Lakshmi"},
-    {sign:"Gemini", lord:"Mercury", deity:"Vishnu"},
-    {sign:"Cancer", lord:"Moon", deity:"Parvati"},
-    {sign:"Leo", lord:"Sun", deity:"Shiva"},
-    {sign:"Virgo", lord:"Mercury", deity:"Vishnu"},
-    {sign:"Libra", lord:"Venus", deity:"Lakshmi"},
-    {sign:"Scorpio", lord:"Mars", deity:"Subramanya"},
-    {sign:"Sagittarius", lord:"Jupiter", deity:"Dakshinamurti"},
-    {sign:"Capricorn", lord:"Saturn", deity:"Hanuman"},
-    {sign:"Aquarius", lord:"Saturn", deity:"Hanuman"},
-    {sign:"Pisces", lord:"Jupiter", deity:"Dakshinamurti"}
-  ];
+function resetChart(){for(let i=1;i<=12;i++)houses[i]=[];drawChart();document.getElementById("result").innerHTML='';}
 
-  const l=lords[n-1];
-  const msgEN=`<h3>Ascendant: ${l.sign}</h3><p><b>Lagnathipathi:</b> ${l.lord}</p><p><b>Shelter Provider:</b> ${l.deity}</p>`;
-  const msgTA=`<h3>லக்னம்: ${l.sign}</h3><p><b>லக்ன அதிபதி:</b> ${l.lord}</p><p><b>சரண தெய்வம்:</b> ${l.deity}</p>`;
-  document.getElementById("result").innerHTML=(lang==='en'?msgEN:msgTA);
+function findShelter(){
+  const lag=parseInt(prompt(lang==='en'?"Enter Lagna No (1–12)":"லக்ன எண் (1–12):"));
+  if(!lag||lag<1||lag>12)return;
+  const map=[
+    ["Aries","Mars","முருகன் / Subramanya"],
+    ["Taurus","Venus","லக்ஷ்மி"],["Gemini","Mercury","விஷ்ணு"],
+    ["Cancer","Moon","பார்வதி"],["Leo","Sun","சிவன்"],
+    ["Virgo","Mercury","விஷ்ணு"],["Libra","Venus","லக்ஷ்மி"],
+    ["Scorpio","Mars","முருகன் / Subramanya"],["Sagittarius","Jupiter","தக்ஷிணாமூர்த்தி"],
+    ["Capricorn","Saturn","அனுமன்"],["Aquarius","Saturn","அனுமன்"],["Pisces","Jupiter","தக்ஷிணாமூர்த்தி"]];
+  const m=map[lag-1];
+  document.getElementById("result").innerHTML=(lang==="en"
+    ?`<h3>Ascendant : ${m[0]}</h3><p><b>Lagna Lord:</b> ${m[1]}</p><p><b>Shelter Provider (Deity):</b> ${m[2]}</p>`
+    :`<h3>லக்னம் : ${m[0]}</h3><p><b>லக்ன அதிபதி :</b> ${m[1]}</p><p><b>சரண அளிப்பவர் (தெய்வம்):</b> ${m[2]}</p>`);
 }
+
+// draw initial empty chart
+drawChart();
 </script>
 </body>
 </html>
+
