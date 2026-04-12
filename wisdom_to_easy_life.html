@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Wisdom to Easy Life</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:system-ui,-apple-system,sans-serif;background:#f0eff8;color:#1a1a2e;padding:1rem;font-size:14px;line-height:1.5;}
+.app{max-width:680px;margin:0 auto;}
+.hdr{text-align:center;margin-bottom:1.25rem;padding:.875rem;background:#3C3489;border-radius:10px;color:#EEEDFE;}
+.hdr h1{font-size:20px;font-weight:700;margin-bottom:2px;}
+.hdr .sub{font-size:11px;opacity:.75;}
+.tabs{display:flex;border:1px solid #ccc;border-radius:8px;overflow:hidden;margin-bottom:1rem;}
+.tab{flex:1;padding:10px;text-align:center;cursor:pointer;font-size:13px;background:#eeecfb;color:#666;border:none;outline:none;}
+.tab.on{background:#3C3489;color:#EEEDFE;font-weight:700;}
+.card{background:#fff;border:1px solid #ddd;border-radius:10px;padding:14px;margin-bottom:.875rem;}
+.card-title{font-size:11px;font-weight:700;color:#534AB7;text-transform:uppercase;letter-spacing:.06em;border-bottom:1px solid #eee;padding-bottom:7px;margin-bottom:10px;}
+label{font-size:12px;color:#555;display:block;margin-bottom:3px;}
+.fg{margin-bottom:10px;}
+.frow{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;}
+input[type=date],input[type=time],input[type=number],select{width:100%;padding:8px 10px;border:1px solid #ccc;border-radius:7px;font-size:13px;background:#fff;color:#222;}
+.gbtn{background:#3C3489;color:#EEEDFE;border:none;border-radius:8px;padding:11px;font-size:14px;cursor:pointer;width:100%;font-weight:700;margin-top:4px;}
+.gbtn:hover{background:#26215C;}
+.rbtn{background:#fff;color:#c0392b;border:1px solid #c0392b;border-radius:8px;padding:9px;font-size:13px;cursor:pointer;width:100%;margin-top:6px;font-weight:600;}
+.rbtn:hover{background:#ffe0d5;}
+.loc-ok{font-size:12px;color:#085041;background:#d4f5e9;border:1px solid #5DCAA5;border-radius:6px;padding:7px 10px;margin-top:5px;display:none;line-height:1.5;}
+.err{color:#c0392b;font-size:12px;margin-top:5px;min-height:16px;}
+.disc{font-size:11px;color:#085041;margin-top:8px;background:#d4f5e9;border:1px solid #5DCAA5;border-radius:6px;padding:7px 10px;line-height:1.5;}
+.hint{font-size:12px;color:#555;margin-bottom:8px;padding:8px 10px;background:#eeecfb;border-radius:7px;line-height:1.5;}
+.warn-box{font-size:11px;color:#7a5200;background:#fff8e1;border:1px solid #f0c040;border-radius:6px;padding:7px 10px;margin-top:6px;line-height:1.5;}
+/* search */
+.search-wrap{position:relative;}
+.search-input{width:100%;padding:8px 10px;border:1px solid #ccc;border-radius:7px;font-size:13px;background:#fff;color:#222;}
+.search-input:focus{outline:none;border-color:#534AB7;}
+.suggestions{position:absolute;top:100%;left:0;right:0;background:#fff;border:1px solid #534AB7;border-top:none;border-radius:0 0 7px 7px;max-height:220px;overflow-y:auto;z-index:100;box-shadow:0 4px 12px rgba(0,0,0,.12);}
+.sug-item{padding:8px 12px;cursor:pointer;font-size:13px;border-bottom:1px solid #f0f0f0;line-height:1.4;}
+.sug-item:hover,.sug-item.act{background:#eeecfb;}
+.cn{font-weight:700;color:#3C3489;}
+.ci{font-size:11px;color:#888;}
+/* kattam */
+.kattam-wrap{border:1.5px solid #999;border-radius:8px;overflow:hidden;margin:.5rem 0;}
+.kattam{display:grid;grid-template-columns:repeat(4,1fr);grid-template-rows:repeat(4,84px);gap:1.5px;background:#999;}
+.rc{background:#fff;padding:4px 5px;overflow:hidden;}
+.rc.clk{cursor:pointer;}.rc.clk:hover{background:#f0eeff;}
+.rc.ilg{background:#eeecfb;outline:2.5px solid #534AB7;outline-offset:-2px;}
+.rc.sel{background:#EEEDFE;}
+.cc{background:#f5f4f2;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:6px;}
+.rn{font-size:8.5px;color:#888;line-height:1.3;margin-bottom:2px;font-weight:600;}
+.rnen{font-size:7px;color:#bbb;}
+.pcs{display:flex;flex-wrap:wrap;gap:2px;margin-top:2px;}
+.ltag{font-size:8px;background:#3C3489;color:#EEEDFE;padding:1px 4px;border-radius:2px;font-weight:700;}
+.ptag{font-size:7.5px;background:#EEEDFE;color:#3C3489;padding:1px 3px;border-radius:2px;white-space:nowrap;line-height:1.4;font-weight:600;}
+.ptag.s1{background:#d4f5e9;color:#085041;}
+.ptag.s2{background:#fff3cd;color:#7a5200;}
+.ptag.s3{background:#ffe0d5;color:#7a1500;}
+.ptag.s4{background:#fce4ec;color:#6a0036;}
+/* picker */
+.picker{background:#fff;border:1px solid #ddd;border-radius:8px;padding:12px;margin-bottom:.75rem;}
+.pb{display:flex;flex-wrap:wrap;gap:5px;margin-top:7px;}
+.pb button{padding:5px 10px;font-size:11px;border:1px solid #ccc;border-radius:20px;cursor:pointer;background:#f5f4f0;color:#333;}
+.pb button.on{background:#EEEDFE;border-color:#534AB7;color:#3C3489;font-weight:700;}
+.pb button.lon{background:#3C3489;color:#EEEDFE;border-color:#3C3489;}
+.deg-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:8px;}
+.deg-item label{font-size:10.5px;color:#555;margin-bottom:2px;font-weight:600;}
+.deg-item input{padding:6px 8px;font-size:12px;width:100%;}
+/* tables */
+.tbl-wrap{overflow-x:auto;}
+.ptbl{width:100%;border-collapse:collapse;font-size:12px;}
+.ptbl th{background:#eeecfb;text-align:left;padding:6px 7px;font-size:11px;color:#3C3489;border-bottom:1.5px solid #ccc;white-space:nowrap;font-weight:700;}
+.ptbl td{padding:6px 7px;border-bottom:1px solid #f0f0f0;vertical-align:middle;}
+.ptbl tr:hover td{background:#fafafa;}
+.ptbl tr.cur td{background:#fff3cd;font-weight:600;}
+.ptbl tr.cur2 td{background:#d4f5e9;font-weight:600;}
+.ptbl tr.lgrow td{background:#eeecfb;}
+.rbadge{font-size:9px;color:#A32D2D;margin-left:2px;background:#FCEBEB;padding:1px 3px;border-radius:3px;}
+/* dasha */
+.dasha-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;}
+.dbox{border-radius:8px;padding:11px;}
+.dbox.maha{background:#EEEDFE;border:1px solid #AFA9EC;}
+.dbox.bhuk{background:#d4f5e9;border:1px solid #5DCAA5;}
+.dbox .dlbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px;}
+.dbox.maha .dlbl{color:#534AB7;}.dbox.bhuk .dlbl{color:#0F6E56;}
+.dbox .dval{font-size:15px;font-weight:700;color:#1a1a2e;margin-bottom:3px;}
+.dbox .ddate{font-size:11px;color:#666;}
+.dbox .drem{font-size:11px;font-weight:600;margin-top:3px;}
+.dbox.maha .drem{color:#534AB7;}.dbox.bhuk .drem{color:#0F6E56;}
+.sec-lbl{font-size:11px;font-weight:700;color:#534AB7;text-transform:uppercase;letter-spacing:.05em;padding:8px 0 6px;border-bottom:1px solid #eee;margin-bottom:8px;}
+/* chain */
+.snode{border:1px solid #e0e0e0;border-radius:8px;padding:10px 12px;margin-bottom:3px;background:#fff;}
+.snode.lg{border-color:#AFA9EC;background:#EEEDFE;}
+.snode.sh{border-color:#5DCAA5;background:#d4f5e9;}
+.snode.sf{border-color:#EF9F27;background:#fff3cd;}
+.snode.lp{border-color:#F09595;background:#FCEBEB;}
+.nlbl{font-size:10px;color:#888;text-transform:uppercase;letter-spacing:.05em;margin-bottom:2px;}
+.npl{font-size:13px;font-weight:700;color:#1a1a2e;}
+.nrs{font-size:11px;color:#666;margin-top:2px;}
+.arr{text-align:center;color:#bbb;font-size:16px;margin:2px 0;}
+.bbdg{display:inline-block;font-size:10px;font-weight:700;padding:2px 9px;border-radius:20px;margin-top:5px;}
+.bself{background:#fff3cd;color:#7a5200;border:1px solid #EF9F27;}
+.bloop{background:#FCEBEB;color:#A32D2D;border:1px solid #F09595;}
+.sumbox{background:#3C3489;color:#EEEDFE;border-radius:10px;padding:13px;margin:.75rem 0;}
+.sumlbl{font-size:10px;opacity:.7;text-transform:uppercase;letter-spacing:.06em;margin-bottom:5px;}
+.sumchain{font-size:13px;font-weight:700;line-height:1.9;}
+.sumbrk{font-size:11px;opacity:.85;margin-top:7px;line-height:1.5;}
+/* deity */
+.dcard{background:#fff;border:1px solid #e8e8e8;border-radius:9px;padding:12px;margin-bottom:8px;display:flex;gap:10px;box-shadow:0 1px 3px rgba(0,0,0,.04);}
+.dbadge{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;margin-top:2px;}
+.d0{background:#EEEDFE;color:#3C3489;}.d1{background:#d4f5e9;color:#085041;}.d2{background:#fff3cd;color:#7a5200;}
+.d3{background:#ffe0d5;color:#7a1500;}.d4{background:#fce4ec;color:#6a0036;}
+.dD{background:#3C3489;color:#EEEDFE;}.dB{background:#085041;color:#d4f5e9;}
+.dbody{flex:1;min-width:0;}
+.dplnt{font-size:11px;color:#534AB7;font-weight:700;margin-bottom:2px;}
+.dname{font-size:14px;font-weight:700;color:#1a1a2e;margin-bottom:4px;}
+.dtags{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:5px;}
+.dtag{font-size:10px;background:#f0eff8;border:1px solid #ccc;color:#444;border-radius:20px;padding:2px 8px;}
+.dmtr{font-size:11px;color:#534AB7;font-style:italic;margin-bottom:4px;font-weight:500;}
+.dins{font-size:11px;color:#666;line-height:1.6;}
+.pm{font-size:13px;color:#666;background:#f5f4f0;border-radius:8px;padding:10px;}
+.advice-note{font-size:11px;color:#555;background:#f5f4f0;border-radius:7px;padding:9px;margin-top:6px;line-height:1.6;border-left:3px solid #534AB7;}
+</style>
+</head>
+<body>
+<div class="app">
+<div class="hdr">
+  <h1>Wisdom to Easy Life</h1>
+  <div class="sub">குருவே சரணம் · Parasara Jyotish · Vedic Horoscope &amp; Shelter Chain Finder</div>
+</div>
+<div class="tabs">
+  <button class="tab on" id="t1" onclick="sMode('birth')">Birth Data</button>
+  <button class="tab"    id="t2" onclick="sMode('manual')">Manual Entry</button>
+</div>
+
+<!-- BIRTH FORM -->
+<div id="bForm">
+  <div class="card">
+    <div class="card-title">Birth Details</div>
+    <div class="frow">
+      <div><label>Date of birth</label><input type="date" id="dob"></div>
+      <div><label>Time of birth (local)</label><input type="time" id="tob" value="06:00"></div>
+    </div>
+    <div class="fg">
+      <label>Timezone</label>
+      <select id="tz">
+        <option value="5.5" selected>+5:30 India (IST)</option>
+        <option value="5.75">+5:45 Nepal</option>
+        <option value="6">+6:00 Bangladesh / Sri Lanka</option>
+        <option value="6.5">+6:30 Myanmar</option>
+        <option value="7">+7:00 Thailand / Vietnam</option>
+        <option value="8">+8:00 Singapore / Malaysia / China</option>
+        <option value="9">+9:00 Japan / Korea</option>
+        <option value="5">+5:00 Pakistan</option>
+        <option value="4">+4:00 Dubai / Mauritius</option>
+        <option value="3">+3:00 Gulf / Moscow</option>
+        <option value="2">+2:00 Central Europe summer / S.Africa</option>
+        <option value="1">+1:00 London BST</option>
+        <option value="0">+0:00 UTC / London winter</option>
+        <option value="-4">-4:00 Canada Atlantic</option>
+        <option value="-5">-5:00 US Eastern</option>
+        <option value="-6">-6:00 US Central</option>
+        <option value="-7">-7:00 US Mountain</option>
+        <option value="-8">-8:00 US Pacific</option>
+        <option value="10">+10:00 Australia East (AEST)</option>
+        <option value="11">+11:00 Australia East (AEDT)</option>
+        <option value="9.5">+9:30 Australia Central</option>
+        <option value="12">+12:00 New Zealand</option>
+      </select>
+    </div>
+    <div class="fg">
+      <label>Birthplace — type city name (built-in database, works offline)</label>
+      <div class="search-wrap">
+        <input type="text" class="search-input" id="placeInput"
+          placeholder="Type: Namakkal, Salem, Jaffna, Dubai, London…"
+          oninput="onPlace()" onkeydown="onKey(event)" autocomplete="off">
+        <div class="suggestions" id="sugBox" style="display:none;"></div>
+      </div>
+      <div id="locOk" class="loc-ok"></div>
+    </div>
+    <details style="margin-top:4px;">
+      <summary style="font-size:12px;color:#534AB7;cursor:pointer;user-select:none;">City not in list? Enter coordinates manually ▾</summary>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px;">
+        <div><label>Latitude (N positive)</label><input type="number" id="manLat" placeholder="e.g. 11.2189" step="0.0001"></div>
+        <div><label>Longitude (E positive)</label><input type="number" id="manLon" placeholder="e.g. 78.1674" step="0.0001"></div>
+      </div>
+      <div style="font-size:11px;color:#888;margin-top:4px;">Find on maps.google.com — right-click any location to see coordinates</div>
+    </details>
+    <button class="gbtn" onclick="doCalc()">Generate Horoscope &amp; Trace Shelter Chain</button>
+    <div id="cErr" class="err"></div>
+    <div class="disc">100% offline · No internet · No API · Lahiri ayanamsa astronomy engine built into this file · Works in any browser</div>
+  </div>
+</div>
+
+<!-- MANUAL ENTRY -->
+<div id="mForm" style="display:none;">
+  <div class="card">
+    <div class="card-title">Manual Chart Entry</div>
+    <div class="hint">Click any house cell to assign Lagna and place planets. Rahu/Ketu auto-place opposite. Enter degrees for Nakshatra &amp; Dasha accuracy.</div>
+    <div class="kattam-wrap"><div class="kattam" id="kattamM"></div></div>
+    <div id="mPicker"></div>
+    <div id="mDegSec" style="display:none;">
+      <div class="sec-lbl" style="margin-top:10px;">Degrees within sign (0.00 – 29.99)</div>
+      <div class="deg-grid" id="mDegInputs"></div>
+      <button class="gbtn" onclick="doManual()" style="margin-top:10px;">Calculate &amp; Find Deities</button>
+    </div>
+    <button class="rbtn" onclick="doReset()">&#8635; Reset Chart</button>
+  </div>
+</div>
+
+<!-- RESULTS -->
+<div id="results" style="display:none;">
+  <div class="card">
+    <div class="card-title">South Indian Rashi Kattam</div>
+    <div class="kattam-wrap"><div class="kattam" id="kattamR"></div></div>
+    <div id="kNote" style="font-size:10.5px;color:#888;margin-top:5px;font-style:italic;line-height:1.6;"></div>
+    <div class="warn-box" id="warnBox" style="display:none;">If any planet looks off by one sign (near sign border), use <strong>Manual Entry</strong> to correct — the chain and deities update instantly.</div>
+  </div>
+  <div class="card">
+    <div class="card-title">Planetary Positions — Degrees, Nakshatra &amp; House</div>
+    <div class="tbl-wrap"><table class="ptbl" id="planetTbl"></table></div>
+  </div>
+  <div class="card" id="dashCard">
+    <div class="card-title">Vimshottari Dasha Bhukti</div>
+    <div id="dashaDiv"></div>
+  </div>
+  <div class="card">
+    <div class="card-title">Parasara Shelter Chain — சரணாலய சங்கிலி</div>
+    <div id="chainDiv"></div>
+  </div>
+  <div class="card">
+    <div class="card-title">Deities to Worship — வணங்க வேண்டிய தெய்வங்கள்</div>
+    <div id="deitiesDiv"></div>
+  </div>
+</div>
+</div>
+
+<script>
+/* ═══ CITY DATABASE — embedded, no internet needed ═══ */
+const CITIES=[
+["Namakkal","Tamil Nadu",11.2189,78.1674,5.5],["Chennai","Tamil Nadu",13.0827,80.2707,5.5],
+["Coimbatore","Tamil Nadu",11.0168,76.9558,5.5],["Salem","Tamil Nadu",11.6643,78.1460,5.5],
+["Madurai","Tamil Nadu",9.9252,78.1198,5.5],["Trichy","Tamil Nadu",10.7905,78.7047,5.5],
+["Tirunelveli","Tamil Nadu",8.7139,77.7567,5.5],["Tiruppur","Tamil Nadu",11.1085,77.3411,5.5],
+["Vellore","Tamil Nadu",12.9165,79.1325,5.5],["Erode","Tamil Nadu",11.3410,77.7172,5.5],
+["Thanjavur","Tamil Nadu",10.7870,79.1378,5.5],["Tiruvannamalai","Tamil Nadu",12.2253,79.0747,5.5],
+["Puducherry","Tamil Nadu",11.9416,79.8083,5.5],["Dindigul","Tamil Nadu",10.3673,77.9803,5.5],
+["Nagercoil","Tamil Nadu",8.1833,77.4119,5.5],["Kanchipuram","Tamil Nadu",12.8185,79.6947,5.5],
+["Kumbakonam","Tamil Nadu",10.9617,79.3788,5.5],["Cuddalore","Tamil Nadu",11.7447,79.7689,5.5],
+["Viluppuram","Tamil Nadu",11.9401,79.4928,5.5],["Theni","Tamil Nadu",10.0104,77.4770,5.5],
+["Ramanathapuram","Tamil Nadu",9.3762,78.8309,5.5],["Virudhunagar","Tamil Nadu",9.5806,77.9624,5.5],
+["Sivaganga","Tamil Nadu",9.8476,78.4809,5.5],["Nagapattinam","Tamil Nadu",10.7651,79.8441,5.5],
+["Karur","Tamil Nadu",10.9601,78.0766,5.5],["Dharmapuri","Tamil Nadu",12.1277,78.1580,5.5],
+["Krishnagiri","Tamil Nadu",12.5186,78.2137,5.5],["Chidambaram","Tamil Nadu",11.3993,79.6934,5.5],
+["Hosur","Tamil Nadu",12.7409,77.8253,5.5],["Palani","Tamil Nadu",10.4509,77.5240,5.5],
+["Ooty","Tamil Nadu",11.4102,76.6950,5.5],["Pollachi","Tamil Nadu",10.6554,77.0071,5.5],
+["Gobichettipalayam","Tamil Nadu",11.4536,77.3543,5.5],["Bhavani","Tamil Nadu",11.4476,77.6836,5.5],
+["Rasipuram","Tamil Nadu",11.4707,78.1718,5.5],["Tenkasi","Tamil Nadu",8.9601,77.3152,5.5],
+["Kovilpatti","Tamil Nadu",9.1726,77.8722,5.5],["Attur","Tamil Nadu",11.5977,78.5972,5.5],
+["Neyveli","Tamil Nadu",11.5410,79.4958,5.5],["Sivakasi","Tamil Nadu",9.4535,77.7957,5.5],
+["Srirangam","Tamil Nadu",10.8605,78.6925,5.5],["Karaikudi","Tamil Nadu",10.0760,78.7727,5.5],
+["Rameswaram","Tamil Nadu",9.2882,79.3129,5.5],["Kodaikanal","Tamil Nadu",10.2381,77.4892,5.5],
+["Tirupathur","Tamil Nadu",12.4964,78.5614,5.5],["Tambaram","Tamil Nadu",12.9249,80.1000,5.5],
+["Ambur","Tamil Nadu",12.7920,78.7118,5.5],["Tiruchengode","Tamil Nadu",11.3819,77.8944,5.5],
+["Sankari","Tamil Nadu",11.4836,77.9118,5.5],["Mettupalayam","Tamil Nadu",11.2977,76.9346,5.5],
+["Oddanchatram","Tamil Nadu",10.3023,77.7439,5.5],["Kallakurichi","Tamil Nadu",11.7387,78.9575,5.5],
+["Vridhachalam","Tamil Nadu",11.5164,79.3278,5.5],["Tindivanam","Tamil Nadu",12.2352,79.6576,5.5],
+["Vandavasi","Tamil Nadu",12.5039,79.6337,5.5],["Paramakudi","Tamil Nadu",9.5188,78.5910,5.5],
+["Dharapuram","Tamil Nadu",10.7380,77.5115,5.5],["Perambalur","Tamil Nadu",11.2346,78.8809,5.5],
+["Ariyalur","Tamil Nadu",11.1404,79.0760,5.5],["Papanasam","Tamil Nadu",10.9435,79.2757,5.5],
+["Musiri","Tamil Nadu",10.9432,78.4401,5.5],["Udumalpet","Tamil Nadu",10.5857,77.2489,5.5],
+["Vaniyambadi","Tamil Nadu",12.6827,78.6234,5.5],["Aranthangi","Tamil Nadu",10.1746,78.9886,5.5],
+["Thiruvananthapuram","Kerala",8.5241,76.9366,5.5],["Kochi","Kerala",9.9312,76.2673,5.5],
+["Kozhikode","Kerala",11.2588,75.7804,5.5],["Thrissur","Kerala",10.5276,76.2144,5.5],
+["Palakkad","Kerala",10.7867,76.6548,5.5],["Kollam","Kerala",8.8932,76.6141,5.5],
+["Alappuzha","Kerala",9.4981,76.3388,5.5],["Kannur","Kerala",11.8745,75.3704,5.5],
+["Kottayam","Kerala",9.5916,76.5222,5.5],["Malappuram","Kerala",11.0730,76.0740,5.5],
+["Bangalore","Karnataka",12.9716,77.5946,5.5],["Mysore","Karnataka",12.2958,76.6394,5.5],
+["Hubli","Karnataka",15.3647,75.1240,5.5],["Mangalore","Karnataka",12.9141,74.8560,5.5],
+["Udupi","Karnataka",13.3409,74.7421,5.5],["Shimoga","Karnataka",13.9299,75.5681,5.5],
+["Hyderabad","Telangana",17.3850,78.4867,5.5],["Visakhapatnam","Andhra Pradesh",17.6868,83.2185,5.5],
+["Vijayawada","Andhra Pradesh",16.5062,80.6480,5.5],["Tirupati","Andhra Pradesh",13.6288,79.4192,5.5],
+["Guntur","Andhra Pradesh",16.2991,80.4575,5.5],["Nellore","Andhra Pradesh",14.4426,79.9865,5.5],
+["Mumbai","Maharashtra",19.0760,72.8777,5.5],["Pune","Maharashtra",18.5204,73.8567,5.5],
+["Nagpur","Maharashtra",21.1458,79.0882,5.5],["Nashik","Maharashtra",19.9975,73.7898,5.5],
+["Ahmedabad","Gujarat",23.0225,72.5714,5.5],["Surat","Gujarat",21.1702,72.8311,5.5],
+["Jaipur","Rajasthan",26.9124,75.7873,5.5],["Delhi","Delhi",28.6139,77.2090,5.5],
+["Noida","Uttar Pradesh",28.5355,77.3910,5.5],["Gurgaon","Haryana",28.4595,77.0266,5.5],
+["Lucknow","Uttar Pradesh",26.8467,80.9462,5.5],["Kanpur","Uttar Pradesh",26.4499,80.3319,5.5],
+["Agra","Uttar Pradesh",27.1767,78.0081,5.5],["Varanasi","Uttar Pradesh",25.3176,82.9739,5.5],
+["Kolkata","West Bengal",22.5726,88.3639,5.5],["Patna","Bihar",25.5941,85.1376,5.5],
+["Bhopal","Madhya Pradesh",23.2599,77.4126,5.5],["Indore","Madhya Pradesh",22.7196,75.8577,5.5],
+["Chandigarh","Punjab",30.7333,76.7794,5.5],["Amritsar","Punjab",31.6340,74.8723,5.5],
+["Guwahati","Assam",26.1445,91.7362,5.5],["Bhubaneswar","Odisha",20.2961,85.8245,5.5],
+["Colombo","Sri Lanka",6.9271,79.8612,5.5],["Jaffna","Sri Lanka",9.6615,80.0255,5.5],
+["Kandy","Sri Lanka",7.2906,80.6337,5.5],["Trincomalee","Sri Lanka",8.5874,81.2152,5.5],
+["Galle","Sri Lanka",6.0535,80.2210,5.5],["Batticaloa","Sri Lanka",7.7170,81.6924,5.5],
+["Vavuniya","Sri Lanka",8.7514,80.4971,5.5],["Anuradhapura","Sri Lanka",8.3114,80.4037,5.5],
+["London","United Kingdom",51.5074,-0.1278,0],["Birmingham","United Kingdom",52.4862,-1.8904,0],
+["Manchester","United Kingdom",53.4808,-2.2426,0],["Leicester","United Kingdom",52.6369,-1.1398,0],
+["Dubai","UAE",25.2048,55.2708,4],["Abu Dhabi","UAE",24.4539,54.3773,4],
+["Muscat","Oman",23.6139,58.5922,4],["Doha","Qatar",25.2854,51.5310,3],
+["Kuwait City","Kuwait",29.3759,47.9774,3],["Riyadh","Saudi Arabia",24.7136,46.6753,3],
+["Jeddah","Saudi Arabia",21.2854,39.2376,3],["Bahrain","Bahrain",26.0667,50.5577,3],
+["Singapore","Singapore",1.3521,103.8198,8],["Kuala Lumpur","Malaysia",3.1390,101.6869,8],
+["Mauritius","Mauritius",-20.2759,57.5500,4],["New York","USA",40.7128,-74.0060,-5],
+["New Jersey","USA",40.0583,-74.4057,-5],["Chicago","USA",41.8781,-87.6298,-6],
+["Los Angeles","USA",34.0522,-118.2437,-8],["Houston","USA",29.7604,-95.3698,-6],
+["Toronto","Canada",43.6532,-79.3832,-5],["Vancouver","Canada",49.2827,-123.1207,-8],
+["Sydney","Australia",-33.8688,151.2093,10],["Melbourne","Australia",-37.8136,144.9631,10],
+["Auckland","New Zealand",-36.8509,174.7645,12],
+["Johannesburg","South Africa",-26.2041,28.0473,2],["Nairobi","Kenya",-1.2921,36.8219,3],
+];
+const CIDX=CITIES.map(c=>({name:c[0],region:c[1],lat:c[2],lon:c[3],tz:c[4],key:(c[0]+' '+c[1]).toLowerCase()}));
+
+/* ─── SEARCH ─── */
+let geoLat=null,geoLon=null,sugR=[],sugI=-1;
+function onPlace(){
+  const q=document.getElementById('placeInput').value.trim().toLowerCase();
+  const box=document.getElementById('sugBox');
+  geoLat=null;geoLon=null;document.getElementById('locOk').style.display='none';
+  if(q.length<2){box.style.display='none';return;}
+  sugR=CIDX.filter(c=>c.key.includes(q)||c.name.toLowerCase().startsWith(q)).slice(0,10);
+  if(!sugR.length){box.style.display='none';return;}
+  box.innerHTML=sugR.map((c,i)=>`<div class="sug-item" id="si${i}" onclick="pickCity(${i})"><div class="cn">${c.name}</div><div class="ci">${c.region} · ${c.lat.toFixed(3)}°N, ${c.lon.toFixed(3)}°E</div></div>`).join('');
+  box.style.display='block';sugI=-1;
+}
+function onKey(e){
+  const items=document.querySelectorAll('.sug-item'),len=sugR.length;
+  if(e.key==='ArrowDown'){sugI=Math.min(sugI+1,len-1);hilite(items);e.preventDefault();}
+  else if(e.key==='ArrowUp'){sugI=Math.max(sugI-1,0);hilite(items);e.preventDefault();}
+  else if(e.key==='Enter'){if(sugI>=0)pickCity(sugI);else if(len>0)pickCity(0);document.getElementById('sugBox').style.display='none';e.preventDefault();}
+  else if(e.key==='Escape')document.getElementById('sugBox').style.display='none';
+}
+function hilite(items){items.forEach((el,i)=>el.classList.toggle('act',i===sugI));if(items[sugI])items[sugI].scrollIntoView({block:'nearest'});}
+function pickCity(i){
+  const c=sugR[i];geoLat=c.lat;geoLon=c.lon;
+  document.getElementById('placeInput').value=c.name+', '+c.region;
+  document.getElementById('tz').value=c.tz;
+  const ok=document.getElementById('locOk');
+  ok.style.display='block';
+  ok.innerHTML=`<strong>${c.name}</strong>, ${c.region} &nbsp;·&nbsp; Lat ${c.lat.toFixed(4)}° &nbsp;Lon ${c.lon.toFixed(4)}°`;
+  document.getElementById('sugBox').style.display='none';
+}
+document.addEventListener('click',e=>{if(!e.target.closest('.search-wrap'))document.getElementById('sugBox').style.display='none';});
+
+/* ═══ ASTRONOMY ENGINE ═══ */
+const D2R=Math.PI/180,R2D=180/Math.PI;
+function n360(x){return((x%360)+360)%360;}
+function n24(x){return((x%24)+24)%24;}
+
+function toJD(Y,M,D,H){
+  if(M<=2){Y--;M+=12;}
+  const A=Math.floor(Y/100),B=2-A+Math.floor(A/4);
+  return Math.floor(365.25*(Y+4716))+Math.floor(30.6001*(M+1))+D+H/24+B-1524.5;
+}
+
+/* Lahiri ayanamsa */
+function lahiri(jd){
+  const T=(jd-2415020.5)/36525.0;
+  return 22.460444+1.3960417*T+0.00030864*T*T;
+}
+function toRashi(sid){return{rashi:Math.floor(sid/30)+1,deg:sid%30};}
+
+/*
+  ══════════════════════════════════════════════════════════════
+  LAGNA CALCULATION — CORRECTED FORMULA
+  
+  The correct ascendant formula (eastern rising point) is:
+    y =  cos(LMST)
+    x = -(sin(LMST)·cos(ε) + tan(φ)·sin(ε))
+    tropAsc = atan2(y, x)   [normalized 0–360°]
+  
+  The WRONG formula used previously was atan2(-cos,+denominator)
+  which gave the DESCENDANT (western setting point), 180° off.
+  
+  Verification: 16 Oct 1984, 05:23 IST, Namakkal
+    Wrong formula → Meena (rashi 12)   [DESCENDANT — incorrect]
+    Correct formula → Kanni (rashi 6)  [ASCENDANT — correct ✓]
+  ══════════════════════════════════════════════════════════════
+*/
+function calcLagna(jd,lat,lon){
+  /* Step 1: GMST — split-precision to avoid float drift */
+  const JD0=Math.floor(jd-0.5)+0.5;
+  const Hut=(jd-JD0)*24;
+  const T0=(JD0-2451545.0)/36525.0;
+  let GMST0=6.697374558+2400.0513369*T0+0.0000258622*T0*T0-0.0000000017*T0*T0*T0;
+  GMST0=n24(GMST0);
+  const GMSTdeg=n24(GMST0+1.0027379093*Hut)*15.0;
+
+  /* Step 2: LMST */
+  const LMST=n360(GMSTdeg+lon);
+
+  /* Step 3: Obliquity */
+  const T=(jd-2451545.0)/36525.0;
+  const eps=(23.4392911111-0.013004167*T-0.0000001639*T*T)*D2R;
+
+  /* Step 4: CORRECTED ascendant formula */
+  const L=LMST*D2R;
+  const phi=lat*D2R;
+  const y=Math.cos(L);
+  const x=-(Math.sin(L)*Math.cos(eps)+Math.tan(phi)*Math.sin(eps));
+  const tropAsc=n360(Math.atan2(y,x)*R2D);
+
+  /* Step 5: Sidereal */
+  const ayan=lahiri(jd);
+  const sidAsc=n360(tropAsc-ayan);
+  const r=toRashi(sidAsc);
+  return{rashi:r.rashi,deg:r.deg,sidAsc,tropAsc,ayan,LMST};
+}
+
+/* Planet longitudes — mean + equation of centre */
+function tropLon(pl,T){
+  const sM=n360(357.52911+35999.05029*T-0.0001537*T*T)*D2R;
+  const eqC=(1.914602-0.004817*T-0.000014*T*T)*Math.sin(sM)+(0.019993-0.000101*T)*Math.sin(2*sM)+0.000289*Math.sin(3*sM);
+  if(pl==='Sun')return n360(280.46646+36000.76983*T+0.0003032*T*T+eqC);
+  const mL=218.3165+481267.8813*T,mM=n360(134.9634+477198.8676*T)*D2R,mD=n360(297.8502+445267.1115*T)*D2R,mF=n360(93.2721+483202.0175*T)*D2R;
+  if(pl==='Moon')return n360(mL+6.2888*Math.sin(mM)+1.2740*Math.sin(2*mD-mM)+0.6583*Math.sin(2*mD)+0.2136*Math.sin(2*mM)-0.1851*Math.sin(sM)-0.1143*Math.sin(2*mF)+0.0588*Math.sin(2*mD-2*mM)+0.0572*Math.sin(2*mD-sM-mM)+0.0533*Math.sin(2*mD+mM));
+  const maM=n360(19.373+21191.179*T)*D2R;
+  if(pl==='Mars')return n360(355.433+19140.2993*T+1.8497*Math.sin(maM)+0.1029*Math.sin(2*maM)+0.0274*Math.sin(3*maM));
+  const meM=n360(174.7948+4.09233445*(T*36525))*D2R;
+  if(pl==='Mercury')return n360(252.2507+149472.6746*T+23.4400*Math.sin(meM)+2.9765*Math.sin(2*meM)+0.5024*Math.sin(3*meM));
+  const juM=n360(20.021+21.329*T)*D2R;
+  if(pl==='Jupiter')return n360(34.396+3034.9057*T+5.5549*Math.sin(juM)+0.1683*Math.sin(2*juM)+0.0071*Math.sin(3*juM));
+  const veM=n360(212.448+58517.803*T)*D2R;
+  if(pl==='Venus')return n360(181.979+58519.213*T+0.7758*Math.sin(veM)+0.0439*Math.sin(2*veM));
+  const saM=n360(169.651+1219.553*T)*D2R;
+  if(pl==='Saturn')return n360(50.077+1222.1138*T+6.3585*Math.sin(saM)+0.2204*Math.sin(2*saM)+0.0106*Math.sin(3*saM));
+  const ra=n360(125.0445-1934.13626*T+0.0020708*T*T);
+  if(pl==='Rahu')return ra;
+  return n360(ra+180);
+}
+function isRetro(pl,jd){
+  if(pl==='Sun'||pl==='Moon')return false;
+  if(pl==='Rahu'||pl==='Ketu')return true;
+  const T1=(jd-2451545)/36525,T2=(jd+1-2451545)/36525;
+  let d=tropLon(pl,T2)-tropLon(pl,T1);
+  if(d>180)d-=360;if(d<-180)d+=360;
+  return d<0;
+}
+function calcPlanets(jd){
+  const T=(jd-2451545)/36525,ayan=lahiri(jd),out={};
+  ['Sun','Moon','Mars','Mercury','Jupiter','Venus','Saturn','Rahu','Ketu'].forEach(pl=>{
+    const trop=tropLon(pl,T),sid=n360(trop-ayan),r=toRashi(sid);
+    out[pl]={rashi:r.rashi,degInSign:r.deg,sid,retro:isRetro(pl,jd)};
+  });
+  return out;
+}
+
+/* ═══ NAKSHATRA ═══ */
+const NAK=[
+  {n:"Ashwini",t:"அஸ்வினி",l:"Ketu"},{n:"Bharani",t:"பரணி",l:"Venus"},
+  {n:"Krittika",t:"கார்த்திகை",l:"Sun"},{n:"Rohini",t:"ரோகிணி",l:"Moon"},
+  {n:"Mrigashira",t:"மிருகசீரிடம்",l:"Mars"},{n:"Ardra",t:"திருவாதிரை",l:"Rahu"},
+  {n:"Punarvasu",t:"புனர்பூசம்",l:"Jupiter"},{n:"Pushya",t:"பூசம்",l:"Saturn"},
+  {n:"Ashlesha",t:"ஆயில்யம்",l:"Mercury"},{n:"Magha",t:"மகம்",l:"Ketu"},
+  {n:"Purva Phalguni",t:"பூரம்",l:"Venus"},{n:"Uttara Phalguni",t:"உத்திரம்",l:"Sun"},
+  {n:"Hasta",t:"அஸ்தம்",l:"Moon"},{n:"Chitra",t:"சித்திரை",l:"Mars"},
+  {n:"Swati",t:"சுவாதி",l:"Rahu"},{n:"Vishakha",t:"விசாகம்",l:"Jupiter"},
+  {n:"Anuradha",t:"அனுஷம்",l:"Saturn"},{n:"Jyeshtha",t:"கேட்டை",l:"Mercury"},
+  {n:"Mula",t:"மூலம்",l:"Ketu"},{n:"Purva Ashadha",t:"பூராடம்",l:"Venus"},
+  {n:"Uttara Ashadha",t:"உத்திராடம்",l:"Sun"},{n:"Shravana",t:"திருவோணம்",l:"Moon"},
+  {n:"Dhanistha",t:"அவிட்டம்",l:"Mars"},{n:"Shatabhisha",t:"சதயம்",l:"Rahu"},
+  {n:"Purva Bhadrapada",t:"பூரட்டாதி",l:"Jupiter"},{n:"Uttara Bhadrapada",t:"உத்திரட்டாதி",l:"Saturn"},
+  {n:"Revati",t:"ரேவதி",l:"Mercury"}
+];
+function getNak(sid){
+  const NL=360/27,idx=Math.floor(sid/NL)%27,din=sid%NL,pada=Math.floor(din/(NL/4))+1;
+  return{idx,name:NAK[idx].n,tamil:NAK[idx].t,lord:NAK[idx].l,pada,din};
+}
+
+/* ═══ DASHA ═══ */
+const DSEQ=["Ketu","Venus","Sun","Moon","Mars","Rahu","Jupiter","Saturn","Mercury"];
+const DYRS={Ketu:7,Venus:20,Sun:6,Moon:10,Mars:7,Rahu:18,Jupiter:16,Saturn:19,Mercury:17};
+const MSY=365.25*24*3600*1000;
+const MON=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+function fd(d){return d.getDate()+' '+MON[d.getMonth()]+' '+d.getFullYear();}
+function calcDasha(moonSid,birthMs){
+  const nak=getNak(moonSid),dL=nak.lord,dY=DYRS[dL],elapsed=nak.din/(360/27);
+  const si=DSEQ.indexOf(dL),ds0=birthMs-elapsed*dY*MSY;
+  const dashas=[];let ptr=ds0;
+  for(let i=0;i<9;i++){const idx=(si+i)%9,l=DSEQ[idx],y=DYRS[l],e=ptr+y*MSY;dashas.push({lord:l,start:new Date(ptr),end:new Date(e),yrs:y});ptr=e;}
+  const now=Date.now();let curD=0;
+  for(let i=0;i<9;i++){if(now>=dashas[i].start.getTime()&&now<dashas[i].end.getTime()){curD=i;break;}}
+  const cd=dashas[curD],bi=DSEQ.indexOf(cd.lord);
+  const bhuktis=[];let bp=cd.start.getTime();
+  for(let i=0;i<9;i++){const idx=(bi+i)%9,l=DSEQ[idx],y=cd.yrs*(DYRS[l]/120),e=bp+y*MSY;bhuktis.push({lord:l,start:new Date(bp),end:new Date(e),yrs:y});bp=e;}
+  let curB=0;for(let i=0;i<9;i++){if(now>=bhuktis[i].start.getTime()&&now<bhuktis[i].end.getTime()){curB=i;break;}}
+  return{dashas,curD,bhuktis,curB,moonNak:nak};
+}
+
+/* ═══ ASTROLOGY DATA ═══ */
+const RA=[
+  {n:1,nm:"Mesha",t:"மேஷம்",en:"Aries",l:"Mars"},
+  {n:2,nm:"Rishabha",t:"ரிஷபம்",en:"Taurus",l:"Venus"},
+  {n:3,nm:"Mithuna",t:"மிதுனம்",en:"Gemini",l:"Mercury"},
+  {n:4,nm:"Kataka",t:"கடகம்",en:"Cancer",l:"Moon"},
+  {n:5,nm:"Simha",t:"சிம்மம்",en:"Leo",l:"Sun"},
+  {n:6,nm:"Kanni",t:"கன்னி",en:"Virgo",l:"Mercury"},
+  {n:7,nm:"Thulam",t:"துலாம்",en:"Libra",l:"Venus"},
+  {n:8,nm:"Vrischika",t:"விருச்சிகம்",en:"Scorpio",l:"Mars"},
+  {n:9,nm:"Dhanus",t:"தனுசு",en:"Sagittarius",l:"Jupiter"},
+  {n:10,nm:"Makara",t:"மகரம்",en:"Capricorn",l:"Saturn"},
+  {n:11,nm:"Kumbha",t:"கும்பம்",en:"Aquarius",l:"Saturn"},
+  {n:12,nm:"Meena",t:"மீனம்",en:"Pisces",l:"Jupiter"}
+];
+const PL=["Sun","Moon","Mars","Mercury","Jupiter","Venus","Saturn","Rahu","Ketu"];
+const PS={Sun:"Su",Moon:"Mo",Mars:"Ma",Mercury:"Bu",Jupiter:"Gu",Venus:"Sk",Saturn:"Sa",Rahu:"Ra",Ketu:"Ke"};
+const PT={Sun:"Sun",Moon:"Moon",Mars:"Mars",Mercury:"Mercury",Jupiter:"Jupiter",Venus:"Venus",Saturn:"Saturn",Rahu:"Rahu",Ketu:"Ketu"};
+const GP={12:{r:1,c:1},1:{r:1,c:2},2:{r:1,c:3},3:{r:1,c:4},4:{r:2,c:4},5:{r:3,c:4},6:{r:4,c:4},7:{r:4,c:3},8:{r:4,c:2},9:{r:4,c:1},10:{r:3,c:1},11:{r:2,c:1}};
+const OWN={Sun:[5],Moon:[4],Mars:[1,8],Mercury:[3,6],Jupiter:[9,12],Venus:[2,7],Saturn:[10,11],Rahu:[],Ketu:[]};
+const DI={
+  Sun:{d:["Lord Shiva","Lord Rama"],t:["Suryanar Koil (Kumbakonam)","Arunachaleswarar (Thiruvannamalai)"],m:"Om Hreem Suryaya Namaha",i:"Sun rules soul, authority and vitality. Shiva worship removes ego and bestows divine leadership."},
+  Moon:{d:["Lord Shiva","Goddess Parvati"],t:["Thingalur (Moon temple)","Kailasanathar Kanchipuram"],m:"Om Som Somaya Namaha",i:"Moon governs mind and emotions. Shiva-Parvati worship brings mental peace and domestic harmony."},
+  Mars:{d:["Lord Murugan","Lord Subramania"],t:["Palani","Thiruparankundram","Swamimalai","Thiruchendur"],m:"Om Saravana Bhava",i:"Mars governs courage and property. Murugan worship removes enemies and bestows strength and protection."},
+  Mercury:{d:["Lord Maha Vishnu","Lord Krishna"],t:["Thiruvidandai","Guruvayur","Kanchipuram Varadaraja"],m:"Om Namo Narayanaya",i:"Mercury governs intellect and commerce. Vishnu worship brings clarity and prosperity."},
+  Jupiter:{d:["Lord Dakshinamurthy","Lord Ranganathar","Siddhar worship"],t:["Srirangam","Alagar Koil","Chidambaram"],m:"Om Dakshinamurthaye Namaha",i:"Jupiter governs wisdom and dharma. Guru Bhagavan and Siddhar worship opens divine grace and righteous income."},
+  Venus:{d:["Goddess Mahalakshmi","Goddess Ashtalakshmi"],t:["Ashtalakshmi Koil (Chennai)","Kanchipuram Kamakshi"],m:"Om Shreem Mahalakshmiyei Namaha",i:"Venus governs art and relationships. Lakshmi worship brings harmony, creativity and abundance."},
+  Saturn:{d:["Lord Ayyappa","Lord Shani"],t:["Sabarimala","Thirunallar Shani temple"],m:"Om Shri Shanaischaraya Namaha",i:"Saturn governs karma and discipline. Ayyappa and Shani worship reduces delays and karmic burdens."},
+  Rahu:{d:["Goddess Durga","Lord Nagaraja"],t:["Thirunageswaram (Rahu temple)","Srikalahasti"],m:"Om Rahave Namaha",i:"Rahu amplifies desires and illusions. Durga and Naga worship dispels confusion and grants success."},
+  Ketu:{d:["Lord Ganesha","Lord Skanda"],t:["Keezhperumpallam (Ketu temple)","Pillayarpatti"],m:"Om Ketave Namaha",i:"Ketu governs past karma. Ganesha worship removes inherited obstacles and opens liberation."}
+};
+
+/* ═══ SHELTER CHAIN ═══ */
+function buildChain(lagna,pr){
+  if(!lagna)return null;
+  const lr=RA[lagna-1];
+  const chain=[{planet:lr.l,rashiN:lagna,rashiNm:lr.nm,houseNum:1,role:'lagna',breakType:null}];
+  const visited=new Set([lr.l]);let cur=lr.l;
+  for(let i=0;i<10;i++){
+    const pd=pr[cur];if(!pd)break;
+    const rn=pd.rashi,prr=RA[rn-1],sl=prr.l,hn=((rn-lagna+12)%12)+1;
+    if((OWN[cur]||[]).includes(rn)){chain.push({planet:sl,rashiN:rn,rashiNm:prr.nm,houseNum:hn,role:'self',breakType:'self'});break;}
+    if(visited.has(sl)){chain.push({planet:sl,rashiN:rn,rashiNm:prr.nm,houseNum:hn,role:'loop',breakType:'loop'});break;}
+    chain.push({planet:sl,rashiN:rn,rashiNm:prr.nm,houseNum:hn,role:'shelter',breakType:null});
+    visited.add(sl);cur=sl;
+  }
+  return chain;
+}
+
+function dms(deg){
+  const d=Math.floor(deg),mf=(deg-d)*60,m=Math.floor(mf),s=Math.round((mf-m)*60);
+  return`${d}°${String(m).padStart(2,'0')}'${String(s).padStart(2,'0')}"`;
+}
+
+/* ═══ APP STATE ═══ */
+let mode='birth';
+let mC={lagna:null,planets:{}},mSel=null,mDegs={};
+
+/* ─── MAIN CALCULATION ─── */
+function doCalc(){
+  const dob=document.getElementById('dob').value,tob=document.getElementById('tob').value;
+  const tz=parseFloat(document.getElementById('tz').value);
+  const err=document.getElementById('cErr');
+  let lat=geoLat,lon=geoLon;
+  const mLat=parseFloat(document.getElementById('manLat').value||'NaN');
+  const mLon=parseFloat(document.getElementById('manLon').value||'NaN');
+  if(!lat&&!isNaN(mLat)&&!isNaN(mLon)){lat=mLat;lon=mLon;}
+  if(!dob||!tob){err.textContent='Please enter date and time.';return;}
+  if(!lat){err.textContent='Please select a birthplace from suggestions, or enter coordinates manually.';return;}
+  err.textContent='';
+
+  const[Y,Mo,D]=dob.split('-').map(Number);
+  const[H,Mi]=tob.split(':').map(Number);
+  let utcH=(H+Mi/60)-tz,dd=D,mm=Mo,yy=Y;
+  if(utcH<0){utcH+=24;dd--;}else if(utcH>=24){utcH-=24;dd++;}
+  if(dd<=0){mm--;if(mm<=0){mm=12;yy--;}const dp=[0,31,28,31,30,31,30,31,31,30,31,30,31];if(mm===2)dp[2]=((yy%4===0&&yy%100!==0)||yy%400===0)?29:28;dd+=dp[mm];}
+  if(dd>31){dd-=31;mm++;if(mm>12){mm=1;yy++;}}
+
+  const jd=toJD(yy,mm,dd,utcH);
+  const lgRes=calcLagna(jd,lat,lon);
+  const pr=calcPlanets(jd);
+  const birthMs=new Date(yy,mm-1,dd).getTime();
+  const dr=calcDasha(pr.Moon.sid,birthMs);
+  const loc=document.getElementById('placeInput').value||`${lat.toFixed(4)}°N, ${lon.toFixed(4)}°E`;
+  const note=`${loc} · UTC${tz>=0?'+':''}${tz} · Ayanamsa ${lgRes.ayan.toFixed(3)}° · LMST ${lgRes.LMST.toFixed(2)}° · Trop Asc ${lgRes.tropAsc.toFixed(2)}° → Sid ${lgRes.sidAsc.toFixed(2)}°`;
+  showResults({rashi:lgRes.rashi,deg:lgRes.deg,sid:lgRes.sidAsc},pr,dr,note,true);
+}
+
+/* ─── MANUAL ─── */
+function sMode(m){
+  mode=m;
+  document.getElementById('t1').classList.toggle('on',m==='birth');
+  document.getElementById('t2').classList.toggle('on',m==='manual');
+  document.getElementById('bForm').style.display=m==='birth'?'block':'none';
+  document.getElementById('mForm').style.display=m==='manual'?'block':'none';
+  if(m==='manual')renderMK();
+}
+function renderMK(){
+  const k=document.getElementById('kattamM');k.innerHTML='';
+  const cc=document.createElement('div');cc.className='rc cc';cc.style.gridColumn='2/4';cc.style.gridRow='2/4';
+  cc.innerHTML='<div style="font-size:10px;color:#888;text-align:center;line-height:1.5;">ஜாதகம்<br><small>Click cells</small></div>';k.appendChild(cc);
+  for(let rn=1;rn<=12;rn++){
+    const p=GP[rn],r=RA[rn-1],cell=document.createElement('div');
+    cell.className='rc clk';cell.style.gridColumn=p.c;cell.style.gridRow=p.r;
+    if(mC.lagna===rn)cell.classList.add('ilg');
+    if(mSel===rn)cell.classList.add('sel');
+    cell.onclick=(()=>{const x=rn;return()=>openMP(x);})();
+    const ph=PL.filter(pl=>mC.planets[pl]===rn);
+    const tags=ph.map(pl=>`<span class="ptag">${PS[pl]}</span>`).join('');
+    cell.innerHTML=`<div class="rn">${r.t}<br><span class="rnen">${r.en}</span></div><div class="pcs">${mC.lagna===rn?'<span class="ltag">Lg</span>':''}${tags}</div>`;
+    k.appendChild(cell);
+  }
+  const allPl=PL.filter(pl=>mC.planets[pl]);
+  const ds=document.getElementById('mDegSec');
+  if(mC.lagna&&allPl.length>0){
+    ds.style.display='block';
+    document.getElementById('mDegInputs').innerHTML=allPl.map(pl=>
+      `<div class="deg-item"><label>${PS[pl]} — ${PT[pl]}</label><input type="number" min="0" max="29.99" step="0.01" value="${mDegs[pl]||0}" id="deg_${pl}"></div>`
+    ).join('');
+  }else ds.style.display='none';
+}
+function openMP(rn){
+  mSel=rn;renderMK();
+  const r=RA[rn-1],isLg=mC.lagna===rn,ph=PL.filter(pl=>mC.planets[pl]===rn);
+  const pd=document.getElementById('mPicker');pd.style.display='block';
+  pd.innerHTML=`<div class="picker"><div style="font-size:12px;font-weight:700;margin-bottom:6px;">${r.t} — ${r.nm} (${r.en})</div><div class="pb">
+    <button class="${isLg?'lon':''}" onclick="mLg(${rn})">Lagna லக்னம்</button>
+    ${PL.map(pl=>`<button class="${ph.includes(pl)?'on':''}" onclick="mPl('${pl}',${rn})">${PS[pl]} ${PT[pl]}</button>`).join('')}
+  </div></div>`;
+}
+function mLg(rn){mC.lagna=mC.lagna===rn?null:rn;openMP(rn);renderMK();}
+function mPl(pl,rn){
+  const op=rn<=6?rn+6:rn-6;
+  if(mC.planets[pl]===rn){delete mC.planets[pl];if(pl==='Rahu')delete mC.planets['Ketu'];if(pl==='Ketu')delete mC.planets['Rahu'];}
+  else{mC.planets[pl]=rn;if(pl==='Rahu')mC.planets['Ketu']=op;if(pl==='Ketu')mC.planets['Rahu']=op;}
+  openMP(rn);renderMK();
+}
+function doReset(){
+  mC={lagna:null,planets:{}};mSel=null;mDegs={};
+  document.getElementById('mPicker').style.display='none';
+  document.getElementById('mDegSec').style.display='none';
+  document.getElementById('results').style.display='none';
+  renderMK();
+}
+function doManual(){
+  if(!mC.lagna){alert('Please assign Lagna first.');return;}
+  PL.forEach(pl=>{const el=document.getElementById('deg_'+pl);if(el)mDegs[pl]=parseFloat(el.value)||0;});
+  const pr={};
+  PL.forEach(pl=>{const rn=mC.planets[pl];if(!rn)return;const deg=mDegs[pl]||0,sid=(rn-1)*30+deg;pr[pl]={rashi:rn,degInSign:deg,sid,retro:false};});
+  const lgDeg=mDegs['Lagna']||0,lgSid=(mC.lagna-1)*30+lgDeg;
+  const dr=pr.Moon?calcDasha(pr.Moon.sid,Date.now()-35*MSY):null;
+  showResults({rashi:mC.lagna,deg:lgDeg,sid:lgSid},pr,dr,'Manual entry',false);
+}
+
+/* ═══ RENDER ═══ */
+function showResults(lg,pr,dr,note,showWarn){
+  document.getElementById('results').style.display='block';
+  renderKR(lg,pr);
+  document.getElementById('kNote').textContent=note;
+  document.getElementById('warnBox').style.display=showWarn?'block':'none';
+  renderPTbl(lg,pr);
+  if(dr){document.getElementById('dashCard').style.display='block';renderDasha(dr);}
+  else document.getElementById('dashCard').style.display='none';
+  const chain=buildChain(lg.rashi,pr);
+  renderChain(chain,lg.rashi);renderDeities(chain,dr);
+  setTimeout(()=>document.getElementById('results').scrollIntoView({behavior:'smooth'}),100);
+}
+
+function renderKR(lg,pr){
+  const chain=buildChain(lg.rashi,pr)||[],cmap={};
+  chain.forEach((s,i)=>{if(i>0)cmap[s.planet]=i;});
+  const k=document.getElementById('kattamR');k.innerHTML='';
+  const cc=document.createElement('div');cc.className='rc cc';cc.style.gridColumn='2/4';cc.style.gridRow='2/4';
+  cc.innerHTML='<div style="font-size:10px;color:#666;text-align:center;line-height:1.6;">ஜாதகம்<br><small>South Indian</small></div>';k.appendChild(cc);
+  for(let rn=1;rn<=12;rn++){
+    const p=GP[rn],r=RA[rn-1],cell=document.createElement('div');
+    cell.className='rc';cell.style.gridColumn=p.c;cell.style.gridRow=p.r;
+    if(lg.rashi===rn)cell.classList.add('ilg');
+    const ph=PL.filter(pl=>pr[pl]&&pr[pl].rashi===rn);
+    const tags=ph.map(pl=>{
+      const ci=cmap[pl],cls=ci?` s${Math.min(ci,4)}`:'';
+      return`<span class="ptag${cls}">${PS[pl]}${pr[pl].retro?'℞':''} ${pr[pl].degInSign.toFixed(0)}°</span>`;
+    }).join('');
+    const lgTag=lg.rashi===rn?`<span class="ltag">Lg ${lg.deg.toFixed(0)}°</span>`:'';
+    cell.innerHTML=`<div class="rn">${r.t}<br><span class="rnen">${r.en}</span></div><div class="pcs">${lgTag}${tags}</div>`;
+    k.appendChild(cell);
+  }
+}
+
+function renderPTbl(lg,pr){
+  let h=`<tr><th>Graha</th><th>Rashi (Sign)</th><th>Degrees</th><th>Nakshatra</th><th>Pada</th><th>Star Lord</th><th>House</th></tr>`;
+  const lr=RA[lg.rashi-1],lnak=getNak(lg.sid);
+  h+=`<tr class="lgrow"><td><strong>Lagna (Asc)</strong></td><td><strong>${lr.nm}</strong><br><small>${lr.t} · ${lr.en}</small></td><td><strong>${dms(lg.deg)}</strong></td><td><strong>${lnak.name}</strong><br><small>${lnak.tamil}</small></td><td><strong>${lnak.pada}</strong></td><td><strong>${lnak.lord}</strong></td><td><strong>1</strong></td></tr>`;
+  PL.forEach(pl=>{
+    if(!pr[pl])return;
+    const p=pr[pl],r=RA[p.rashi-1],nak=getNak(p.sid),house=((p.rashi-lg.rashi+12)%12)+1;
+    h+=`<tr><td>${PT[pl]}<span style="font-size:10px;color:#888;"> (${PS[pl]})</span>${p.retro?'<span class="rbadge">℞</span>':''}</td><td>${r.nm}<br><small>${r.t} · ${r.en}</small></td><td>${dms(p.degInSign)}</td><td>${nak.name}<br><small>${nak.tamil}</small></td><td>${nak.pada}</td><td>${nak.lord}</td><td>${house}</td></tr>`;
+  });
+  document.getElementById('planetTbl').innerHTML=h;
+}
+
+function renderDasha(dr){
+  const{dashas,curD,bhuktis,curB,moonNak}=dr;
+  const cd=dashas[curD],cb=bhuktis[curB],now=Date.now();
+  const remD=((cd.end.getTime()-now)/MSY).toFixed(2),remB=((cb.end.getTime()-now)/MSY).toFixed(2);
+  let h=`<div style="font-size:12px;color:#444;margin-bottom:12px;padding:9px;background:#f5f4f0;border-radius:7px;"><strong>Janma Nakshatra (Moon Star):</strong> ${moonNak.name} (${moonNak.tamil}) &nbsp;·&nbsp; Pada ${moonNak.pada} &nbsp;·&nbsp; Star Lord: <strong>${moonNak.lord}</strong></div>`;
+  h+=`<div class="dasha-grid"><div class="dbox maha"><div class="dlbl">Mahadasha (current)</div><div class="dval">${PT[cd.lord]} Dasha</div><div class="ddate">${fd(cd.start)} → ${fd(cd.end)}</div><div class="drem">${remD} yrs remaining</div></div><div class="dbox bhuk"><div class="dlbl">Antardasha / Bhukti</div><div class="dval">${PT[cb.lord]} Bhukti</div><div class="ddate">${fd(cb.start)} → ${fd(cb.end)}</div><div class="drem">${remB} yrs remaining</div></div></div>`;
+  h+=`<div class="sec-lbl">Antardasha periods within ${PT[cd.lord]} Mahadasha</div>`;
+  h+=`<table class="ptbl"><tr><th>#</th><th>Bhukti Lord</th><th>Start</th><th>End</th><th>Duration (yrs)</th></tr>`;
+  bhuktis.forEach((b,i)=>{const ic=i===curB;h+=`<tr class="${ic?'cur2':''}"><td>${i+1}</td><td>${ic?'<strong>':''}${PT[b.lord]} (${b.lord})${ic?'</strong>':''}</td><td>${fd(b.start)}</td><td>${fd(b.end)}</td><td>${b.yrs.toFixed(3)}</td></tr>`;});
+  h+=`</table><div class="sec-lbl" style="margin-top:14px;">Mahadasha Sequence from Birth</div>`;
+  h+=`<table class="ptbl"><tr><th>#</th><th>Dasha Lord</th><th>Start</th><th>End</th><th>Years</th></tr>`;
+  dashas.forEach((d,i)=>{const ic=i===curD;h+=`<tr class="${ic?'cur':''}"><td>${i+1}</td><td>${ic?'<strong>':''}${PT[d.lord]} (${d.lord}) Dasha${ic?'</strong>':''}</td><td>${fd(d.start)}</td><td>${fd(d.end)}</td><td>${d.yrs}</td></tr>`;});
+  h+=`</table>`;
+  document.getElementById('dashaDiv').innerHTML=h;
+}
+
+function renderChain(chain,lagna){
+  if(!chain||chain.length<2){const lr=RA[lagna-1];document.getElementById('chainDiv').innerHTML=`<div class="pm">Lagna: <strong>${lr.nm}</strong> — Lagnathipathi: <strong>${PT[lr.l]}</strong>. Place this planet to trace the chain.</div>`;return;}
+  let h='';
+  chain.forEach((s,i)=>{
+    if(i>0)h+=`<div class="arr">↓</div>`;
+    let nc='snode';if(i===0)nc+=' lg';else if(s.breakType==='self')nc+=' sf';else if(s.breakType==='loop')nc+=' lp';else nc+=' sh';
+    const badge=s.breakType==='self'?`<span class="bbdg bself">Self-shelter — chain ends here</span>`:s.breakType==='loop'?`<span class="bbdg bloop">Loop — chain ends here</span>`:'';
+    h+=`<div class="${nc}"><div class="nlbl">${i===0?'Lagna · Lagnathipathi':'Shelter provider '+i}</div><div class="npl">${PT[s.planet]} <span style="font-size:11px;font-weight:400;color:#888;">(${s.planet})</span></div><div class="nrs">${i===0?s.rashiNm+' (Lagna)':'House '+s.houseNum+' · '+s.rashiNm}</div>${badge}</div>`;
+  });
+  const last=chain[chain.length-1],cs=chain.map(s=>s.planet).join(' → ');
+  const brk=last.breakType==='self'?last.planet+' in own sign ('+last.rashiNm+') — self-shelter achieved':last.breakType==='loop'?last.planet+' loops back — mutual shelter':last.planet+' not placed — add to continue';
+  h+=`<div class="sumbox"><div class="sumlbl">Full shelter chain</div><div class="sumchain">${cs}</div><div class="sumbrk">${brk}</div></div>`;
+  document.getElementById('chainDiv').innerHTML=h;
+}
+
+function renderDeities(chain,dr){
+  const DC=['d0','d1','d2','d3','d4'];let h='';
+  if(chain&&chain.length>1){
+    h+=`<div class="sec-lbl">A. Lagnathipathi Shelter Chain Deities</div>`;
+    const seen=new Set(),dpl=[];
+    chain.forEach((s,i)=>{if(!seen.has(s.planet)){seen.add(s.planet);dpl.push({planet:s.planet,step:i});}});
+    dpl.forEach(({planet,step})=>{
+      const info=DI[planet],dc=DC[Math.min(step,4)],sl=step===0?'Lagnathipathi':'Shelter '+step;
+      h+=`<div class="dcard"><div class="dbadge ${dc}">${step===0?'L':step}</div><div class="dbody"><div class="dplnt">${sl} · ${PT[planet]} (${planet})</div><div class="dname">${info.d.join(' &amp; ')}</div><div class="dtags">${info.t.map(t=>`<span class="dtag">${t}</span>`).join('')}</div><div class="dmtr">${info.m}</div><div class="dins">${info.i}</div></div></div>`;
+    });
+  }
+  if(dr){
+    const dL=dr.dashas[dr.curD].lord,bL=dr.bhuktis[dr.curB].lord;
+    h+=`<div class="sec-lbl" style="margin-top:12px;">B. Current Dasha &amp; Bhukti Lords</div>`;
+    const di=DI[dL];
+    h+=`<div class="dcard"><div class="dbadge dD">D</div><div class="dbody"><div class="dplnt">Mahadasha Lord · ${PT[dL]} (${dL})</div><div class="dname">${di.d.join(' &amp; ')}</div><div class="dtags">${di.t.map(t=>`<span class="dtag">${t}</span>`).join('')}</div><div class="dmtr">${di.m}</div><div class="dins">${di.i}</div></div></div>`;
+    if(bL!==dL){const bi=DI[bL];h+=`<div class="dcard"><div class="dbadge dB">B</div><div class="dbody"><div class="dplnt">Bhukti Lord · ${PT[bL]} (${bL})</div><div class="dname">${bi.d.join(' &amp; ')}</div><div class="dtags">${bi.t.map(t=>`<span class="dtag">${t}</span>`).join('')}</div><div class="dmtr">${bi.m}</div><div class="dins">${bi.i}</div></div></div>`;}
+    h+=`<div class="advice-note"><strong>Worship priority:</strong> Propitiate the <strong>Bhukti lord (${bL})</strong> first for immediate grace, then the <strong>Dasha lord (${dL})</strong> for long-term spiritual foundation.</div>`;
+  }
+  if(!h)h=`<div class="pm">Set lagna and place planets to see deity recommendations.</div>`;
+  document.getElementById('deitiesDiv').innerHTML=h;
+}
+
+renderMK();
+</script>
+</body>
+</html>
